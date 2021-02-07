@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "StartBackEnd",
+            "type": "npm",
+            "script": "dev",
+            "path": "/",
+            "problemMatcher": [],
+            "detail": "starts backend"
+        },
+        {
+            "label": "Start Test Server",
+            "type": "npm",
+            "script": "test",
+            "path": "/",
+            "problemMatcher": [],
+            "detail": "starts test for server"
+        },
+    ]
+}
