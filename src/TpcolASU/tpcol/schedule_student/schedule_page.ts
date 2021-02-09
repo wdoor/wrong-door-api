@@ -45,9 +45,9 @@ class SchedulePage extends Page {
     ): Promise<Document> {
         return new Promise<Document>(async (resolve) => {
             const page = await SchedulePage.getPage(
-                    TPCPages.ScheduleByGroups,
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                    new URLSearchParams(sch_req as any),
+                TPCPages.ScheduleByGroups,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                new URLSearchParams(sch_req as any),
             );
             resolve(page);
         });

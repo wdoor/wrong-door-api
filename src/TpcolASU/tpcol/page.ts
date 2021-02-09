@@ -9,7 +9,7 @@ export default class Page {
      * @param column_n номер столбика на странице
      * @returns массив текстовых значений ячеек
      */
-    protected static async getColumn(
+    public static async getColumn(
         doc: Document,
         table_n: number,
         column_n: number,
@@ -27,7 +27,7 @@ export default class Page {
      * @param args post аргументы
      * @returns Document страницы сайта тпк
      */
-    protected static async getPage(
+    public static async getPage(
         url: string,
         args: URLSearchParams = new URLSearchParams(),
     ): Promise<Document> {
@@ -72,8 +72,7 @@ export default class Page {
     }
 }
 
-export enum TPCPages
-{
+export enum TPCPages {
     /** Расписание групп */
     ScheduleByGroups = "http://www.tpcol.ru/asu/timetablestud.php?f=1",
     /** Расписание преподавателей */
