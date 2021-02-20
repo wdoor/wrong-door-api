@@ -1,4 +1,4 @@
-import { SmartCollege } from "../../../database";
+import { SmartCollege } from "../../database";
 import OutpLog from "./output_interface";
 
 export default class OutputDB {

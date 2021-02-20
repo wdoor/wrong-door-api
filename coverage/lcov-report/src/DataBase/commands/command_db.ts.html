@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/database.ts</title>
+    <title>Code coverage report for src/DataBase/commands/command_db.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../prettify.css" />
-    <link rel="stylesheet" href="../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../favicon.png" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../sort-arrow-sprite.png);
+            background-image: url(../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">src</a> database.ts</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">src/DataBase/commands</a> command_db.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">31.58% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/20</span>
+                <span class='fraction'>6/19</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">100% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">25% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>1/4</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/5</span>
+                <span class='fraction'>2/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">31.58% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/20</span>
+                <span class='fraction'>6/19</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -109,38 +109,11 @@
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -149,12 +122,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -164,64 +134,85 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import MySql, { MysqlError } from "mysql";
-import { config } from "dotenv";
-// Это чтоб если я поменял днс имя или пароль, то мне не пришлось бы менять это везде
-config();
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { SmartCollege } from "../../database";
+import Command from "./command_interface";
 &nbsp;
-export class BaseConnect {
-    // TODO: Невозможно разорвать соединение с базой данных из-за всех этих
-    // вторичных перехватчиков ошибок,
-    // мб нада найти ключ, чтоб когда я сам разрываю он срабатывал, или свой создать.
-    public connection: MySql.Connection;
-&nbsp;
-    constructor(db_name:string) {
-        const databaseConfig = {
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            database: db_name,
-            password: process.env.DB_PASS,
-        };
-&nbsp;
-        this.connect(databaseConfig);
+export default class CommandsDB {
+    /**
+     * @returns массив команд из базы
+     */
+    public static async get(): Promise&lt;Command[]&gt; {
+        const output: Command[] = [];
+        return new Promise((resolve) =&gt; {
+            SmartCollege.query("SELECT * FROM commands",
+<span class="fstat-no" title="function not covered" >                (_</span>, rows) =&gt; {
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+<span class="cstat-no" title="statement not covered" >                    rows.forEach(<span class="fstat-no" title="function not covered" >(r</span>ow: any) =&gt; {</span>
+                        const command = <span class="cstat-no" title="statement not covered" >new Command();</span>
+<span class="cstat-no" title="statement not covered" >                        command.command = row.command;</span>
+<span class="cstat-no" title="statement not covered" >                        command.type = row.type;</span>
+<span class="cstat-no" title="statement not covered" >                        command.id = row.id;</span>
+<span class="cstat-no" title="statement not covered" >                        output.push(command);</span>
+                    });
+<span class="cstat-no" title="statement not covered" >                    resolve(output);</span>
+                });
+        });
     }
 &nbsp;
-    private connect(databaseConfig: any) {
-        this.connection = MySql.createConnection(databaseConfig);
-&nbsp;
-        this.connection.connect(this.onconnect.bind(this));
-        setInterval(this.anti_disconnect.bind(this), 5000);
-&nbsp;
-        this.connection.on("error", this.handleError.bind(this));
+    /**
+     * Добавляет команду в базу
+     * @param command Команда
+     * @returns успешность добавления команды
+     */
+    public <span class="fstat-no" title="function not covered" >static </span>async add(command: Command): Promise&lt;boolean&gt; {
+<span class="cstat-no" title="statement not covered" >        return new Promise(<span class="fstat-no" title="function not covered" >(r</span>esolve) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            SmartCollege.query(</span>
+                "INSERT INTO commands (command, type) VALUES (? , ?)",
+                [command.command, command.type],
+            );
+<span class="cstat-no" title="statement not covered" >            resolve(true);</span>
+        });
     }
 &nbsp;
-    private onconnect(err: MysqlError) {
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (err) {
-            console.log("error when connecting to db:", err);
-            setTimeout(this.connect.bind(this), 2000);
-        }
-    }
-&nbsp;
-    private anti_disconnect() {
-        this.connection.query("SELECT 1");
-    }
-&nbsp;
-    private <span class="fstat-no" title="function not covered" >handleError(</span>err: MysqlError) {
-<span class="cstat-no" title="statement not covered" >        console.log("db error", err);</span>
-<span class="cstat-no" title="statement not covered" >        if (err.code === "PROTOCOL_CONNECTION_LOST") {</span>
-<span class="cstat-no" title="statement not covered" >            this.connect.bind(this);</span>
-        } else {
-<span class="cstat-no" title="statement not covered" >            throw err;</span>
-        }
+    /**
+     * Пытаеться удалить команду из базы данных
+     * @param id Идентификатор команды
+     * @returns успешнось удаления
+     */
+    public <span class="fstat-no" title="function not covered" >static </span>async delete(id: string): Promise&lt;boolean&gt; {
+<span class="cstat-no" title="statement not covered" >        return new Promise(<span class="fstat-no" title="function not covered" >(r</span>esolve) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            SmartCollege.query("DELETE IGNORE FROM commands WHERE id = ? LIMIT 1", id);</span>
+<span class="cstat-no" title="statement not covered" >            resolve(true);</span>
+        });
     }
 }
-&nbsp;
-const SmartCollege: MySql.Connection = new BaseConnect("smartcollege").connection;
-&nbsp;
-export { SmartCollege };
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -232,14 +223,14 @@ export { SmartCollege };
                 at Sat Feb 20 2021 21:25:10 GMT+0400 (Самарское стандартное время)
             </div>
         </div>
-        <script src="../prettify.js"></script>
+        <script src="../../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../sorter.js"></script>
-        <script src="../block-navigation.js"></script>
+        <script src="../../../sorter.js"></script>
+        <script src="../../../block-navigation.js"></script>
     </body>
 </html>
     

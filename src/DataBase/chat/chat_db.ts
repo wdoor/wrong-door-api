@@ -1,4 +1,4 @@
-import { SmartCollege } from "../../../database";
+import { SmartCollege } from "../../database";
 import Message from "./chat_interface";
 
 export default class ChatDB {

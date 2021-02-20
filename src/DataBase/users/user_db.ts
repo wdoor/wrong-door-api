@@ -1,5 +1,5 @@
 import { config } from "dotenv";
-import { SmartCollege } from "../../../database";
+import { SmartCollege } from "../../database";
 import AccessLevel from "./access_level";
 import User from "./user_interface";
 
@@ -9,7 +9,7 @@ export default class UsersDB {
     /** Возвращает список пользователей
      * @returns пользователи
     */
-     public static async get(): Promise<User[]> {
+    public static async get(): Promise<User[]> {
         const users: User[] = [];
         return new Promise((resolve) => {
             SmartCollege.query("SELECT * FROM users",

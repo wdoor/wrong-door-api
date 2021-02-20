@@ -1,4 +1,4 @@
-import { SmartCollege } from "../../../database";
+import { SmartCollege } from "../../database";
 import Command from "./command_interface";
 
 export default class CommandsDB {
