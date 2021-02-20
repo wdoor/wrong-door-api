@@ -1,7 +1,6 @@
 import express, { Application } from "express";
 import { graphqlHTTP, OptionsData } from "express-graphql";
-import SMRouter from "./SmartCollege/smart_college";
-import TPCRouter from "./TpcolASU/tpcol";
+import SMRouter from "./smart_college";
 
 const server: Application = express();
 
