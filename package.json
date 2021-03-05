@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "apollo-server-express": "^2.21.0",
+    "class-validator": "^0.13.1",
     "dotenv": "^8.2.0",
     "encoding": "^0.1.13",
     "express": "^4.17.1",
@@ -19,14 +21,17 @@
     "iconv": "^3.0.0",
     "jsdom": "^16.4.0",
     "mysql": "^2.18.1",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.1",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^1.1.1",
+    "typeorm": "^0.2.31"
   },
   "devDependencies": {
     "@types/express": "^4.17.9",
     "@types/jest": "^26.0.20",
     "@types/jsdom": "^16.2.6",
     "@types/mysql": "^2.15.17",
-    "@types/node": "^14.14.19",
+    "@types/node": "^14.14.31",
     "@types/node-fetch": "^2.5.7",
     "@typescript-eslint/eslint-plugin": "^4.4.1",
     "@typescript-eslint/parser": "^4.14.1",

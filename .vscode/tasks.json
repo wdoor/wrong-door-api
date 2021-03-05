@@ -2,15 +2,15 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "StartBackEnd",
+            "label": "Start server",
             "type": "npm",
             "script": "dev",
             "path": "/",
             "problemMatcher": [],
-            "detail": "starts backend"
+            "detail": "starts api"
         },
         {
-            "label": "Start Test Server",
+            "label": "Start test",
             "type": "npm",
             "script": "test",
             "path": "/",
