@@ -5,6 +5,7 @@ import {
     PrimaryGeneratedColumn,
     BaseEntity,
 } from "typeorm";
+import AccessLevel from "../access_level";
 
 @ObjectType()
 @Entity()
@@ -22,14 +23,14 @@ export default class User extends BaseEntity {
     username: string;
 
     @Field(() => Int, { nullable: false })
-    @Column({ default: 0 })
+    @Column({ default: AccessLevel.Denied })
     access_level: number;
 
-    @Field(() => String, { nullable: false })
-    @Column()
-    password: string;
-
     @Field(() => Date, { nullable: false })
-    @Column({ type: "datetime" })
+    @Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
     last_online_time: Date;
+
+    @Field(() => String, { nullable: true })
+    @Column({ nullable: true })
+    image: string;
 }
