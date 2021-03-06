@@ -38,16 +38,16 @@ export default class OutputResilver {
         return (messages);
     }
 
-    @Mutation(() => Boolean)
+    @Mutation(() => OutputMessage)
     async AddOutput(
         @Arg("message", () => OutputMessageInput, { nullable: false }) message: OutputMessageInput,
-    ) {
-        await OutputMessage.insert({
+    ): Promise<OutputMessage> {
+        const created_output = await OutputMessage.create({
             message: message.message,
             username: message.username,
             time: new Date(),
-        } as OutputMessage);
-        return (true);
+        } as OutputMessage).save();
+        return (created_output);
     }
 
     @Mutation(() => Boolean)

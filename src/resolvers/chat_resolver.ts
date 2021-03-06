@@ -38,16 +38,16 @@ export default class ChatResolver {
         return (messages);
     }
 
-    @Mutation(() => Boolean)
+    @Mutation(() => ChatMessage)
     async AddMessage(
         @Arg("message", () => ChatMessageInput, { nullable: false }) message: ChatMessage,
-    ) {
-        await ChatMessage.insert({
+    ): Promise<ChatMessage> {
+        const created_message = await ChatMessage.create({
             message: message.message,
             username: message.username,
             time: new Date(),
-        } as ChatMessage);
-        return (true);
+        } as ChatMessage).save();
+        return (created_message);
     }
 
     @Mutation(() => Boolean)

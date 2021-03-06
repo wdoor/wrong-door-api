@@ -41,17 +41,17 @@ export default class CommandResolver {
         return (messages);
     }
 
-    @Mutation(() => Boolean)
+    @Mutation(() => Command)
     async AddCommand(
         @Arg("command", () => CommandInput, { nullable: false }) command: CommandInput,
-    ) {
-        await Command.insert({
+    ): Promise<Command> {
+        const created_command = await Command.create({
             command: command.command,
             username: command.username,
             type: command.type,
             time: new Date(),
-        } as Command);
-        return (true);
+        } as Command).save();
+        return (created_command);
     }
 
     @Mutation(() => Boolean)

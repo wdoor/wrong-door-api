@@ -11,7 +11,6 @@ import {
     InputType,
     Field,
 } from "type-graphql";
-import AccessLevel from "../access_level";
 import User from "../entity/users";
 
 @InputType()
@@ -23,6 +22,18 @@ class UserInput {
     username: string;
 }
 
+@InputType()
+class UserUpdateInput {
+    @Field(() => String, { nullable: true })
+    username?: string;
+
+    @Field(() => Int, { nullable: true })
+    access_level?: number;
+
+    @Field(() => String, { nullable: true })
+    image?: string;
+}
+
 @Resolver()
 export default class UserResolver {
     @Query(() => [User])
@@ -31,25 +42,29 @@ export default class UserResolver {
         return (messages);
     }
 
-    @Mutation(() => Boolean)
-    async AddUser(
-        @Arg("User", () => UserInput, { nullable: false }) user: UserInput,
-    ) {
-        await User.insert({
-            deviceid: user.deviceid,
-            username: user.username,
-            access_level: (AccessLevel.Denied as number),
-            password: "",
-            last_online_time: new Date(),
-        } as User);
-        return (true);
+    @Mutation(() => User)
+    async UpdateUser(
+        @Arg("id", () => Int) id: number,
+        @Arg("updated", () => UserUpdateInput) updated: UserUpdateInput,
+    ): Promise<User> {
+        await User.update({ id }, updated);
+        const updated_user = await User.findOneOrFail(id);
+        return (updated_user);
+    }
+
+    @Mutation(() => User)
+    async CreateUser(
+        @Arg("User", () => UserInput, { nullable: false }) new_user: UserInput,
+    ): Promise<User> {
+        const created_user: User = await User.create(new_user).save();
+        return (created_user);
     }
 
     @Mutation(() => Boolean)
     async DeleteUser(
-        @Arg("id", () => Int, { nullable: false }) to_delete_id: number,
+        @Arg("id", () => Int, { nullable: false }) id: number,
     ) {
-        await User.delete({ id: to_delete_id });
+        await User.delete({ id });
         return (true);
     }
 }
