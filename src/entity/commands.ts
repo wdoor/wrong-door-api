@@ -15,7 +15,7 @@ export default class Command extends BaseEntity {
 
     @Field(() => String, { nullable: false })
     @Column()
-    command: string;
+    body: string;
 
     @Field(() => String, { nullable: false })
     @Column()

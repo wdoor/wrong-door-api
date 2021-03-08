@@ -34,5 +34,8 @@ module.exports = {
             requireParamDescription: false,
         }],
         "no-underscore-dangle": "off",
+        "max-classes-per-file": "off",
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "class-methods-use-this": "off",
     },
 };

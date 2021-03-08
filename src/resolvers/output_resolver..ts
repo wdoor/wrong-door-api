@@ -1,7 +1,3 @@
-/* eslint-disable max-classes-per-file */
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable class-methods-use-this */
 import {
     Resolver,
     Arg,
@@ -26,7 +22,7 @@ class OutputMessageInput {
 @Resolver()
 export default class OutputResilver {
     @Query(() => [OutputMessage])
-    async GetOutput(
+    async Output(
         @Arg("id", () => Int, { nullable: true }) id: number,
     ) {
         let messages;

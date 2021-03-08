@@ -1,7 +1,3 @@
-/* eslint-disable max-classes-per-file */
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable class-methods-use-this */
 import {
     Resolver,
     Arg,
@@ -17,7 +13,7 @@ import Command from "../entity/commands";
 @InputType()
 class CommandInput {
     @Field(() => String)
-    command: string;
+    body: string;
 
     @Field(() => String)
     username: string;
@@ -29,7 +25,7 @@ class CommandInput {
 @Resolver()
 export default class CommandResolver {
     @Query(() => [Command])
-    async GetCommands(
+    async Commands(
         @Arg("id", () => Int, { nullable: true }) id: number,
     ) {
         let messages;
@@ -46,7 +42,7 @@ export default class CommandResolver {
         @Arg("command", () => CommandInput, { nullable: false }) command: CommandInput,
     ): Promise<Command> {
         const created_command = await Command.create({
-            command: command.command,
+            body: command.body,
             username: command.username,
             type: command.type,
             time: new Date(),

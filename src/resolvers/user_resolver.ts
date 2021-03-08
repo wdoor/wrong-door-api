@@ -1,7 +1,3 @@
-/* eslint-disable max-classes-per-file */
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable class-methods-use-this */
 import {
     Resolver,
     Arg,
@@ -37,7 +33,7 @@ class UserUpdateInput {
 @Resolver()
 export default class UserResolver {
     @Query(() => [User])
-    async GetUsers() {
+    async Users() {
         const messages = await User.find();
         return (messages);
     }

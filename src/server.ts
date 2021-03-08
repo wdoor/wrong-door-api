@@ -8,6 +8,9 @@ import CommandResolver from "./resolvers/commands_resolver";
 import OutputResolver from "./resolvers/output_resolver.";
 import UserResolver from "./resolvers/user_resolver";
 
+// TODO: Аутентификация
+// TODO: Докер
+
 (async () => {
     const app = express();
 
