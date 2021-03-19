@@ -11,6 +11,8 @@ import UserResolver from "./resolvers/user_resolver";
 // TODO: Аутентификация
 // TODO: Докер
 
+const PORT = 7878;
+
 (async () => {
   const app = express();
 
@@ -25,8 +27,12 @@ import UserResolver from "./resolvers/user_resolver";
 
   apolloServer.applyMiddleware({ app, cors: false });
 
-  app.listen(7878, () => {
+  app.listen(PORT, () => {
     // eslint-disable-next-line no-console
-    console.log("express server started");
+    console.log(`
+        express server STARTED
+        on port ${PORT}
+        url = http://localhost:${PORT}/graphql
+        `);
   });
 })();
