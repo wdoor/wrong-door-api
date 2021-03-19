@@ -16,11 +16,11 @@ export default class ChatMessage extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field(() => User, { nullable: false })
-  @ManyToOne(() => User, { eager: true, onDelete: "CASCADE" })
+  @ManyToOne(() => User, { onDelete: "CASCADE" })
   @JoinColumn({ name: "userId" })
   user: User;
 
+  @Field(() => Int)
   @Column({ nullable: false })
   userId: number;
 

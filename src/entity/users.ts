@@ -26,6 +26,6 @@ export default class User extends BaseEntity {
   last_online_time: Date;
 
   @Field(() => String, { nullable: true })
-  @Column({ nullable: true })
+  @Column("longtext", { nullable: true })
   image: string;
 }
