@@ -6,6 +6,10 @@ import {
   Mutation,
   InputType,
   Field,
+  Subscription,
+  Root,
+  PubSub,
+  Publisher,
 } from "type-graphql";
 import { MoreThan } from "typeorm";
 import ChatMessage from "../entity/chat";
@@ -32,9 +36,18 @@ export default class ChatResolver {
     return messages;
   }
 
+  @Subscription(() => ChatMessage, {
+    topics: "MESSAGES",
+  })
+  async newMessage(@Root() message: ChatMessage): Promise<ChatMessage> {
+    return message;
+  }
+
   @Mutation(() => ChatMessage)
   async AddMessage(
     @Arg("message", () => ChatMessageInput, { nullable: false })
+    @PubSub("MESSAGES")
+    publish: Publisher<ChatMessage>,
     message: ChatMessage
   ): Promise<ChatMessage> {
     const created_message = await ChatMessage.create({
@@ -42,6 +55,7 @@ export default class ChatResolver {
       userId: message.userId,
       time: new Date(),
     } as ChatMessage).save();
+    await publish(created_message);
     return created_message;
   }
 
