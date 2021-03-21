@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import express from "express";
-import { ApolloServer, PubSub } from "apollo-server-express";
+import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { createServer } from "http";
 import { execute, subscribe } from "graphql";
@@ -15,7 +15,6 @@ import UserResolver from "./resolvers/user_resolver";
 // TODO: Докер
 
 const PORT = 7878;
-const pubsub = new PubSub();
 
 (async () => {
   const app = express();
