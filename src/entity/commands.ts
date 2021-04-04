@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
+import CommandType from "./command_types";
 
 @ObjectType()
 @Entity()
@@ -16,9 +17,9 @@ export default class Command extends BaseEntity {
   @Column()
   username: string;
 
-  @Field(() => Int, { nullable: false })
+  @Field(() => CommandType, { nullable: false })
   @Column()
-  type: number;
+  type: CommandType;
 
   @Field(() => Date, { nullable: false })
   @Column({ type: "datetime" })
