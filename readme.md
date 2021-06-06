@@ -1,6 +1,4 @@
 # WrongDoor-Api
-
-### WrongDoor Api
  - [x] Chat
  - [x] Commands
  - [x] Output
