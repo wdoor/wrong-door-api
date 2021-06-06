@@ -1,5 +1,14 @@
 # WrongDoor-Api
 
+### WrongDoor Api
+ - [x] Chat
+ - [x] Commands
+ - [x] Output
+ - [x] Users
+ - [ ] Rooms
+ - [ ] Docker
+ - [ ] Auth
+
 ### Это переписанная с PHP Апишка, которая позволяет осуществлять удаленное управление колледжом.
 
 ### Проблема: 
