@@ -10,40 +10,39 @@ import ChatResolver from "./resolvers/chat_resolver";
 import CommandResolver from "./resolvers/commands_resolver";
 import LogsResolver from "./resolvers/logs_resolver.";
 import UserResolver from "./resolvers/user_resolver";
+import Config from "./config/config";
 
 // TODO: Аутентификация
 // TODO: Докер
 
-const PORT = 7878;
-
 (async () => {
-  const app = express();
-  const schema = await buildSchema({
-    resolvers: [ChatResolver, LogsResolver, CommandResolver, UserResolver],
-  });
+	const app = express();
+	const schema = await buildSchema({
+		resolvers: [ChatResolver, LogsResolver, CommandResolver, UserResolver],
+	});
 
-  await createConnection();
+	await createConnection();
 
-  const apolloServer = new ApolloServer({ schema });
-  apolloServer.applyMiddleware({ app });
+	const apolloServer = new ApolloServer({ schema });
+	apolloServer.applyMiddleware({ app });
 
-  const server = createServer(app);
-  server.listen(PORT, () => {
-    // eslint-disable-next-line no-new
-    new SubscriptionServer(
-      {
-        execute,
-        subscribe,
-        schema,
-      },
-      {
-        server,
-      }
-    );
+	const server = createServer(app);
+	server.listen(Config.Port, () => {
+		// eslint-disable-next-line no-new
+		new SubscriptionServer(
+			{
+				execute,
+				subscribe,
+				schema,
+			},
+			{
+				server,
+			}
+		);
 
-    console.log(`
+		console.log(`
 		express server STARTED
-		on port ${PORT}
-		url = http://localhost:${PORT}/graphql`);
-  });
+		on port ${Config.Port}
+		url = http://localhost:${Config.Port}/graphql`);
+	});
 })();
