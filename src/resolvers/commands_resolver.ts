@@ -6,9 +6,18 @@ import {
 	Mutation,
 	InputType,
 	Field,
+	Subscription,
+	Root,
+	Publisher,
+	PubSub,
 } from "type-graphql";
-import { MoreThan } from "typeorm";
+import { FindConditions, MoreThan } from "typeorm";
 import Command from "../entity/commands";
+
+export enum CommandsSubscribtions {
+	Delete = "delete_command",
+	New = "new_command",
+}
 
 @InputType()
 class CommandInput {
@@ -29,44 +38,62 @@ export default class CommandResolver {
 		@Arg("id", () => Int, { nullable: true }) id: number,
 		@Arg("execute_statement", () => Boolean, { nullable: true })
 		execute_statement: boolean
-	) {
-		// TODO: 2:08, я это написал, что это, помогите...,
-		// раздельно писать нельзя, тогда больше данных из бд будет брать....
-		let messages: Command[];
-		if (id !== undefined && execute_statement !== undefined) {
-			messages = await Command.find({
-				id: MoreThan(id),
-				is_executed: execute_statement,
-			});
-		} else if (execute_statement !== undefined) {
-			messages = await Command.find({ is_executed: execute_statement });
-		} else if (id !== undefined) {
-			messages = await Command.find({ id: MoreThan(id) });
-		} else {
-			messages = await Command.find();
-		}
-		return messages;
+	): Promise<Command[]> {
+		const findParams = {
+			deleted: false,
+			...(id !== undefined ? { id: MoreThan(id) } : {}),
+			...(execute_statement !== undefined
+				? { is_executed: execute_statement }
+				: {}),
+		} as FindConditions<Command>;
+
+		const commands = await Command.find(findParams);
+
+		return commands;
 	}
 
 	@Mutation(() => Command)
 	async AddCommand(
 		@Arg("command", () => CommandInput, { nullable: false })
-		command: CommandInput
+		command: CommandInput,
+		@PubSub(CommandsSubscribtions.New)
+		publish: Publisher<Command>
 	): Promise<Command> {
 		const created_command = await Command.create({
-			body: command.body,
-			username: command.username,
-			type: command.type,
 			time: new Date(),
-		} as Command).save();
+			...command,
+		}).save();
+
+		publish(created_command);
+
 		return created_command;
 	}
 
-	@Mutation(() => Boolean)
+	@Mutation(() => Command)
 	async DeleteCommand(
-		@Arg("id", () => Int, { nullable: false }) to_delete_id: number
-	) {
-		await Command.delete({ id: to_delete_id });
-		return true;
+		@Arg("id", () => Int, { nullable: false }) to_delete_id: number,
+		@PubSub(CommandsSubscribtions.Delete)
+		publish: Publisher<Command>
+	): Promise<Command> {
+		const command_to_delete = await Command.findOne({ id: to_delete_id });
+
+		if (command_to_delete) {
+			command_to_delete.deleted = true;
+			await command_to_delete.save();
+			publish(command_to_delete);
+			return command_to_delete;
+		}
+
+		throw new Error("Mesage not found");
+	}
+
+	@Subscription(() => Command, { topics: CommandsSubscribtions.New })
+	async newCommand(@Root() message: Command): Promise<Command> {
+		return message;
+	}
+
+	@Subscription(() => Command, { topics: CommandsSubscribtions.Delete })
+	async deletedCommand(@Root() message: Command): Promise<Command> {
+		return message;
 	}
 }
