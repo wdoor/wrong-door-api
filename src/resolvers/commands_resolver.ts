@@ -39,13 +39,15 @@ export default class CommandResolver {
 		@Arg("execute_statement", () => Boolean, { nullable: true })
 		execute_statement: boolean
 	): Promise<Command[]> {
-		const findParams = {
-			deleted: false,
-			...(id !== undefined ? { id: MoreThan(id) } : {}),
-			...(execute_statement !== undefined
-				? { is_executed: execute_statement }
-				: {}),
-		} as FindConditions<Command>;
+		const findParams = { deleted: false } as FindConditions<Command>;
+
+		if (id !== undefined) {
+			findParams.id = MoreThan(id);
+		}
+
+		if (execute_statement !== undefined) {
+			findParams.is_executed = execute_statement;
+		}
 
 		const commands = await Command.find(findParams);
 
@@ -64,7 +66,7 @@ export default class CommandResolver {
 			...command,
 		}).save();
 
-		publish(created_command);
+		await publish(created_command);
 
 		return created_command;
 	}
@@ -80,7 +82,7 @@ export default class CommandResolver {
 		if (command_to_delete) {
 			command_to_delete.deleted = true;
 			await command_to_delete.save();
-			publish(command_to_delete);
+			await publish(command_to_delete);
 			return command_to_delete;
 		}
 
