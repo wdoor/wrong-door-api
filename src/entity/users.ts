@@ -21,6 +21,10 @@ export default class User extends BaseEntity {
 	@Column({ default: AccessLevel.Denied })
 	access_level: number;
 
+	@Field(() => Boolean)
+	@Column({ default: false })
+	deleted: boolean;
+
 	@Field(() => Date, { nullable: false })
 	@Column({ type: "datetime", default: () => "CURRENT_TIMESTAMP" })
 	last_online_time: Date;

@@ -40,9 +40,11 @@ import Config from "./config/config";
 			}
 		);
 
+		// eslint-disable-next-line no-console
 		console.log(`
-		express server STARTED
-		on port ${Config.Port}
-		url = http://localhost:${Config.Port}/graphql`);
+			express server STARTED
+			on port ${Config.Port}
+			url = http://localhost:${Config.Port}/graphql
+		`);
 	});
 })();
