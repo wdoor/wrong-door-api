@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from "type-graphql";
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from "typeorm";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import AccessLevel from "./access_level";
 
 @ObjectType()

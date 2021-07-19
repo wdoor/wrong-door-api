@@ -1,12 +1,12 @@
 /* eslint-disable arrow-parens */
 import { Field, Int, ObjectType } from "type-graphql";
 import {
-	Entity,
-	Column,
-	PrimaryGeneratedColumn,
 	BaseEntity,
-	OneToOne,
+	Column,
+	Entity,
 	JoinColumn,
+	OneToOne,
+	PrimaryGeneratedColumn,
 } from "typeorm";
 import Command from "./commands";
 

@@ -1,11 +1,11 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import {
-	Entity,
-	Column,
-	PrimaryGeneratedColumn,
 	BaseEntity,
-	ManyToOne,
+	Column,
+	Entity,
 	JoinColumn,
+	ManyToOne,
+	PrimaryGeneratedColumn,
 } from "typeorm";
 import User from "./users";
 

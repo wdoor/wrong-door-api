@@ -1,15 +1,15 @@
 import {
-	Resolver,
 	Arg,
-	Query,
+	Field,
+	InputType,
 	Int,
 	Mutation,
-	InputType,
-	Field,
-	Subscription,
-	Root,
 	Publisher,
 	PubSub,
+	Query,
+	Resolver,
+	Root,
+	Subscription,
 } from "type-graphql";
 import { FindConditions, MoreThan } from "typeorm";
 import Command from "../entity/commands";
@@ -36,7 +36,7 @@ class LogsMessageInput {
 export default class LogsResolver {
 	@Query(() => [LogsMessage])
 	async Logs(
-		@Arg("id", () => Int, { nullable: true }) id: number
+		@Arg("id", () => Int, { nullable: true }) id: number,
 	): Promise<LogsMessage[]> {
 		const find_params: FindConditions<LogsMessage> = { deleted: false };
 
@@ -52,7 +52,7 @@ export default class LogsResolver {
 		@Arg("log", () => LogsMessageInput, { nullable: false })
 		message: LogsMessageInput,
 		@PubSub(LogsSubscription.New)
-		publish: Publisher<LogsMessage>
+		publish: Publisher<LogsMessage>,
 	): Promise<LogsMessage> {
 		const new_log_message: Partial<LogsMessage> = {
 			...message,
@@ -64,7 +64,7 @@ export default class LogsResolver {
 
 			await Command.update(
 				{ id: created_log.commandId },
-				{ is_executed: true }
+				{ is_executed: true },
 			);
 
 			await publish(created_log);
@@ -80,7 +80,7 @@ export default class LogsResolver {
 		@Arg("id", () => Int, { nullable: false })
 		to_delete_id: number,
 		@PubSub(LogsSubscription.Delete)
-		publish: Publisher<LogsMessage>
+		publish: Publisher<LogsMessage>,
 	): Promise<LogsMessage> {
 		const log_to_delete = await LogsMessage.findOne({ id: to_delete_id });
 
@@ -99,7 +99,7 @@ export default class LogsResolver {
 
 	@Subscription(() => LogsMessage, { topics: LogsSubscription.Delete })
 	async deletedLogMessage(
-		@Root() log_message: LogsMessage
+		@Root() log_message: LogsMessage,
 	): Promise<LogsMessage> {
 		log_message.deleted = true;
 		await log_message.save();

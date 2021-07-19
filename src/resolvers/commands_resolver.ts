@@ -1,15 +1,15 @@
 import {
-	Resolver,
 	Arg,
-	Query,
+	Field,
+	InputType,
 	Int,
 	Mutation,
-	InputType,
-	Field,
-	Subscription,
-	Root,
 	Publisher,
 	PubSub,
+	Query,
+	Resolver,
+	Root,
+	Subscription,
 } from "type-graphql";
 import { FindConditions, MoreThan } from "typeorm";
 import Command from "../entity/commands";
@@ -38,7 +38,7 @@ export default class CommandResolver {
 		@Arg("id", () => Int, { nullable: true })
 		id: number,
 		@Arg("execute_statement", () => Boolean, { nullable: true })
-		execute_statement: boolean
+		execute_statement: boolean,
 	): Promise<Command[]> {
 		const find_params = { deleted: false } as FindConditions<Command>;
 
@@ -60,7 +60,7 @@ export default class CommandResolver {
 		@Arg("command", () => CommandInput, { nullable: false })
 		command: CommandInput,
 		@PubSub(CommandsSubscribtion.New)
-		publish: Publisher<Command>
+		publish: Publisher<Command>,
 	): Promise<Command> {
 		const created_command = await Command.create({
 			time: new Date(),
@@ -77,7 +77,7 @@ export default class CommandResolver {
 		@Arg("id", () => Int, { nullable: false })
 		to_delete_id: number,
 		@PubSub(CommandsSubscribtion.Delete)
-		publish: Publisher<Command>
+		publish: Publisher<Command>,
 	): Promise<Command> {
 		const command_to_delete = await Command.findOne({ id: to_delete_id });
 

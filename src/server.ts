@@ -1,16 +1,16 @@
-import "reflect-metadata";
-import { createConnection } from "typeorm";
-import express from "express";
 import { ApolloServer } from "apollo-server-express";
-import { buildSchema } from "type-graphql";
-import { createServer } from "http";
+import express from "express";
 import { execute, subscribe } from "graphql";
+import { createServer } from "http";
+import "reflect-metadata";
 import { SubscriptionServer } from "subscriptions-transport-ws";
+import { buildSchema } from "type-graphql";
+import { createConnection } from "typeorm";
+import Config from "./config/config";
 import ChatResolver from "./resolvers/chat_resolver";
 import CommandResolver from "./resolvers/commands_resolver";
 import LogsResolver from "./resolvers/logs_resolver.";
 import UserResolver from "./resolvers/user_resolver";
-import Config from "./config/config";
 
 // TODO: Аутентификация
 // TODO: Докер
@@ -37,7 +37,7 @@ import Config from "./config/config";
 			},
 			{
 				server,
-			}
+			},
 		);
 
 		// eslint-disable-next-line no-console

@@ -1,15 +1,15 @@
 import {
-	Resolver,
 	Arg,
-	Query,
+	Field,
+	InputType,
 	Int,
 	Mutation,
-	InputType,
-	Field,
-	Subscription,
-	Root,
-	PubSub,
 	Publisher,
+	PubSub,
+	Query,
+	Resolver,
+	Root,
+	Subscription,
 } from "type-graphql";
 import User from "../entity/users";
 
@@ -49,8 +49,10 @@ export default class UserResolver {
 
 	@Mutation(() => User)
 	async UpdateUser(
-		@Arg("id", () => Int) id: number,
-		@Arg("updated", () => UserUpdateInput) updated: UserUpdateInput
+		@Arg("id", () => Int)
+		id: number,
+		@Arg("updated", () => UserUpdateInput)
+		updated: UserUpdateInput,
 	): Promise<User> {
 		await User.update({ id }, updated);
 		const updated_user = await User.findOneOrFail(id);
@@ -62,7 +64,7 @@ export default class UserResolver {
 		@Arg("User", () => UserInput, { nullable: false })
 		new_user: UserInput,
 		@PubSub(UserSubscribtion.New)
-		publish: Publisher<User>
+		publish: Publisher<User>,
 	): Promise<User> {
 		const created_user: User = await User.create(new_user).save();
 		await publish(created_user);
@@ -74,7 +76,7 @@ export default class UserResolver {
 		@Arg("id", () => Int, { nullable: false })
 		id: number,
 		@PubSub(UserSubscribtion.Delete)
-		publish: Publisher<User>
+		publish: Publisher<User>,
 	): Promise<User> {
 		const user_to_delete = await User.findOne({ id });
 

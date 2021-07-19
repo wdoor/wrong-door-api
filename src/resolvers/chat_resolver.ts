@@ -1,15 +1,15 @@
 import {
-	Resolver,
 	Arg,
-	Query,
+	Field,
+	InputType,
 	Int,
 	Mutation,
-	InputType,
-	Field,
-	Subscription,
-	Root,
-	PubSub,
 	Publisher,
+	PubSub,
+	Query,
+	Resolver,
+	Root,
+	Subscription,
 } from "type-graphql";
 import { FindConditions, MoreThan } from "typeorm";
 import ChatMessage from "../entity/chat";
@@ -30,7 +30,7 @@ export enum ChatSubscribtion {
 export default class ChatResolver {
 	@Query(() => [ChatMessage])
 	async Messages(
-		@Arg("id", () => Int, { nullable: true }) id: number
+		@Arg("id", () => Int, { nullable: true }) id: number,
 	): Promise<ChatMessage[]> {
 		const find_params: FindConditions<ChatMessage> = { deleted: false };
 
@@ -46,7 +46,7 @@ export default class ChatResolver {
 		@Arg("message", () => ChatMessageInput, { nullable: false })
 		message: ChatMessage,
 		@PubSub(ChatSubscribtion.New)
-		publish: Publisher<ChatMessage>
+		publish: Publisher<ChatMessage>,
 	): Promise<ChatMessage> {
 		const created_message = await ChatMessage.create({
 			...message,
@@ -61,7 +61,7 @@ export default class ChatResolver {
 		@Arg("id", () => Int, { nullable: false })
 		to_delete_id: number,
 		@PubSub(ChatSubscribtion.Delete)
-		publish: Publisher<ChatMessage>
+		publish: Publisher<ChatMessage>,
 	): Promise<ChatMessage> {
 		const message_to_delete = await ChatMessage.findOne({ id: to_delete_id });
 
