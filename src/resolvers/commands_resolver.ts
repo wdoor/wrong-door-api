@@ -14,7 +14,7 @@ import {
 import { FindConditions, MoreThan } from "typeorm";
 import Command from "../entity/commands";
 
-export enum CommandsSubscribtions {
+export enum CommandsSubscribtion {
 	Delete = "delete_command",
 	New = "new_command",
 }
@@ -35,21 +35,22 @@ class CommandInput {
 export default class CommandResolver {
 	@Query(() => [Command])
 	async Commands(
-		@Arg("id", () => Int, { nullable: true }) id: number,
+		@Arg("id", () => Int, { nullable: true })
+		id: number,
 		@Arg("execute_statement", () => Boolean, { nullable: true })
 		execute_statement: boolean
 	): Promise<Command[]> {
-		const findParams = { deleted: false } as FindConditions<Command>;
+		const find_params = { deleted: false } as FindConditions<Command>;
 
 		if (id !== undefined) {
-			findParams.id = MoreThan(id);
+			find_params.id = MoreThan(id);
 		}
 
 		if (execute_statement !== undefined) {
-			findParams.is_executed = execute_statement;
+			find_params.is_executed = execute_statement;
 		}
 
-		const commands = await Command.find(findParams);
+		const commands = await Command.find(find_params);
 
 		return commands;
 	}
@@ -58,7 +59,7 @@ export default class CommandResolver {
 	async AddCommand(
 		@Arg("command", () => CommandInput, { nullable: false })
 		command: CommandInput,
-		@PubSub(CommandsSubscribtions.New)
+		@PubSub(CommandsSubscribtion.New)
 		publish: Publisher<Command>
 	): Promise<Command> {
 		const created_command = await Command.create({
@@ -73,15 +74,14 @@ export default class CommandResolver {
 
 	@Mutation(() => Command)
 	async DeleteCommand(
-		@Arg("id", () => Int, { nullable: false }) to_delete_id: number,
-		@PubSub(CommandsSubscribtions.Delete)
+		@Arg("id", () => Int, { nullable: false })
+		to_delete_id: number,
+		@PubSub(CommandsSubscribtion.Delete)
 		publish: Publisher<Command>
 	): Promise<Command> {
 		const command_to_delete = await Command.findOne({ id: to_delete_id });
 
 		if (command_to_delete) {
-			command_to_delete.deleted = true;
-			await command_to_delete.save();
 			await publish(command_to_delete);
 			return command_to_delete;
 		}
@@ -89,13 +89,15 @@ export default class CommandResolver {
 		throw new Error("Mesage not found");
 	}
 
-	@Subscription(() => Command, { topics: CommandsSubscribtions.New })
-	async newCommand(@Root() message: Command): Promise<Command> {
-		return message;
+	@Subscription(() => Command, { topics: CommandsSubscribtion.New })
+	async newCommand(@Root() command: Command): Promise<Command> {
+		return command;
 	}
 
-	@Subscription(() => Command, { topics: CommandsSubscribtions.Delete })
-	async deletedCommand(@Root() message: Command): Promise<Command> {
-		return message;
+	@Subscription(() => Command, { topics: CommandsSubscribtion.Delete })
+	async deletedCommand(@Root() command: Command): Promise<Command> {
+		command.deleted = true;
+		await command.save();
+		return command;
 	}
 }

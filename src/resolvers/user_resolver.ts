@@ -6,8 +6,18 @@ import {
   Mutation,
   InputType,
   Field,
+  Subscription,
+  Root,
+  PubSub,
+  Publisher,
+  Ctx,
 } from "type-graphql";
 import User from "../entity/users";
+
+export enum UserSubscribtion {
+  Delete = "delete_user",
+  New = "new_user",
+}
 
 @InputType()
 class UserInput {
@@ -33,9 +43,10 @@ class UserUpdateInput {
 @Resolver()
 export default class UserResolver {
   @Query(() => [User])
-  async Users() {
-    const messages = await User.find();
-    return messages;
+  async Users(@Ctx() ctx: any): Promise<User[]> {
+    const users = await User.find({ deleted: false });
+
+    return users;
   }
 
   @Mutation(() => User)
@@ -50,15 +61,42 @@ export default class UserResolver {
 
   @Mutation(() => User)
   async CreateUser(
-    @Arg("User", () => UserInput, { nullable: false }) new_user: UserInput
+    @Arg("User", () => UserInput, { nullable: false })
+    new_user: UserInput,
+    @PubSub(UserSubscribtion.New)
+    publish: Publisher<User>
   ): Promise<User> {
     const created_user: User = await User.create(new_user).save();
+    await publish(created_user);
     return created_user;
   }
 
-  @Mutation(() => Boolean)
-  async DeleteUser(@Arg("id", () => Int, { nullable: false }) id: number) {
-    await User.delete({ id });
-    return true;
+  @Mutation(() => User)
+  async DeleteUser(
+    @Arg("id", () => Int, { nullable: false })
+    id: number,
+    @PubSub(UserSubscribtion.Delete)
+    publish: Publisher<User>
+  ): Promise<User> {
+    const user_to_delete = await User.findOne({ id });
+
+    if (user_to_delete) {
+      await publish(user_to_delete);
+      return user_to_delete;
+    }
+
+    throw new Error("User not found");
+  }
+
+  @Subscription(() => User, { topics: UserSubscribtion.New })
+  async newUser(@Root() user: User): Promise<User> {
+    return user;
+  }
+
+  @Subscription(() => User, { topics: UserSubscribtion.Delete })
+  async deletedUser(@Root() user: User): Promise<User> {
+    user.deleted = true;
+    await user.save();
+    return user;
   }
 }
