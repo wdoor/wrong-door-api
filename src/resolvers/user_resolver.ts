@@ -43,9 +43,8 @@ class UserUpdateInput {
 @Resolver()
 export default class UserResolver {
   @Query(() => [User])
-  async Users(@Ctx() ctx: any): Promise<User[]> {
+  async Users(): Promise<User[]> {
     const users = await User.find({ deleted: false });
-
     return users;
   }
 
