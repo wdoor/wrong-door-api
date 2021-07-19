@@ -6,45 +6,63 @@ import { buildSchema } from "type-graphql";
 import { createServer } from "http";
 import { execute, subscribe } from "graphql";
 import { SubscriptionServer } from "subscriptions-transport-ws";
+import jwt from "express-jwt";
 import ChatResolver from "./resolvers/chat_resolver";
 import CommandResolver from "./resolvers/commands_resolver";
 import LogsResolver from "./resolvers/logs_resolver.";
 import UserResolver from "./resolvers/user_resolver";
 import Config from "./config/config";
+import { AuthMiddleware, ContextType, User } from "./authChecker";
 
 // TODO: Аутентификация
 // TODO: Докер
 
 (async () => {
-	const app = express();
-	const schema = await buildSchema({
-		resolvers: [ChatResolver, LogsResolver, CommandResolver, UserResolver],
-	});
+  await createConnection();
 
-	await createConnection();
+  const app = express();
 
-	const apolloServer = new ApolloServer({ schema });
-	apolloServer.applyMiddleware({ app });
+  app.use(
+    "/graphql",
+    jwt({
+      secret: "Aue",
+      algorithms: ["HS256"],
+    })
+  );
 
-	const server = createServer(app);
-	server.listen(Config.Port, () => {
-		// eslint-disable-next-line no-new
-		new SubscriptionServer(
-			{
-				execute,
-				subscribe,
-				schema,
-			},
-			{
-				server,
-			}
-		);
+  const schema = await buildSchema({
+    resolvers: [ChatResolver, LogsResolver, CommandResolver, UserResolver],
+    authChecker: AuthMiddleware,
+  });
 
-		// eslint-disable-next-line no-console
-		console.log(`
+  const apolloServer = new ApolloServer({
+    schema,
+    context: ({ req }): ContextType => {
+      const context: ContextType = { user: req.user as User };
+      return context;
+    },
+  });
+  apolloServer.applyMiddleware({ app });
+
+  const server = createServer(app);
+  server.listen(Config.Port, () => {
+    // eslint-disable-next-line no-new
+    new SubscriptionServer(
+      {
+        execute,
+        subscribe,
+        schema,
+      },
+      {
+        server,
+      }
+    );
+
+    // eslint-disable-next-line no-console
+    console.log(`
 			express server STARTED
 			on port ${Config.Port}
 			url = http://localhost:${Config.Port}/graphql
 		`);
-	});
+  });
 })();
