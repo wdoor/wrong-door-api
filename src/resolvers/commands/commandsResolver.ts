@@ -1,5 +1,3 @@
-import { deleteCommand } from "resolvers/commands/procedures/deleteCommand";
-import { findCommands } from "resolvers/commands/procedures/findCommands";
 import {
 	Arg,
 	Int,
@@ -11,7 +9,9 @@ import {
 	Root,
 	Subscription,
 } from "type-graphql";
-import Command from "../../entity/commands";
+import Command from "@Entities/commands";
+import { findCommands } from "./procedures/findCommands";
+import { deleteCommand } from "./procedures/deleteCommand";
 import CommandsSubscribtion from "./commandsSubscribtionTypes";
 import { addCommand, CommandInput } from "./procedures/addCommand";
 
