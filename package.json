@@ -4,8 +4,9 @@
 	"description": "",
 	"scripts": {
 		"test": "jest --coverage",
-		"dev": "nodemon src/server.ts",
-		"build": "tsc -p ."
+		"build": "ts-node -r tsconfig-paths/register src/server.ts",
+		"start": "nodemon ./dist/server.js",
+		"watch": "tsc-watch --p tsconfig.json --onSuccess 'yarn build && yarn start'"
 	},
 	"keywords": [],
 	"author": "",
@@ -20,9 +21,11 @@
 		"graphql": "^15.5.0",
 		"graphql-subscriptions": "^1.2.1",
 		"iconv": "^3.0.0",
+		"tsc-watch": "^4.4.0",
 		"jsdom": "^16.4.0",
 		"mysql": "^2.18.1",
 		"node-fetch": "^2.6.1",
+		"tsconfig-paths": "^3.10.1",
 		"reflect-metadata": "^0.1.13",
 		"sqlite3": "^5.0.2",
 		"subscriptions-transport-ws": "^0.9.18",
