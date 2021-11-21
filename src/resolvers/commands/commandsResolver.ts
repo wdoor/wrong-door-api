@@ -1,3 +1,4 @@
+import { deleteCommand } from "resolvers/commands/procedures/deleteCommand";
 import { findCommands } from "resolvers/commands/procedures/findCommands";
 import {
 	Arg,
@@ -10,7 +11,6 @@ import {
 	Root,
 	Subscription,
 } from "type-graphql";
-import { FindConditions, MoreThan } from "typeorm";
 import Command from "../../entity/commands";
 import CommandsSubscribtion from "./commandsSubscribtionTypes";
 import { addCommand, CommandInput } from "./procedures/addCommand";
@@ -18,48 +18,33 @@ import { addCommand, CommandInput } from "./procedures/addCommand";
 @Resolver()
 export default class CommandResolver {
 	@Query(() => [Command])
-	async Commands(
+	Commands(
 		@Arg("id", () => Int, { nullable: true })
 		id?: number,
 		@Arg("execute_statement", () => Boolean, { nullable: true })
 		execute_statement?: boolean,
 	): Promise<Command[]> {
-		const commands = await findCommands({
-			fromId: id,
-			onlyExecuted: execute_statement,
-		});
-		return commands;
+		return findCommands({ fromId: id, onlyExecuted: execute_statement });
 	}
 
 	@Mutation(() => Command)
-	async AddCommand(
+	AddCommand(
 		@Arg("command", () => CommandInput, { nullable: false })
 		command: CommandInput,
 		@PubSub(CommandsSubscribtion.New)
 		publish: Publisher<Command>,
 	): Promise<Command> {
-		const newCommand = await addCommand(command);
-
-		await publish(newCommand);
-
-		return newCommand;
+		return addCommand({ command, publish });
 	}
 
 	@Mutation(() => Command)
-	async DeleteCommand(
+	DeleteCommand(
 		@Arg("id", () => Int, { nullable: false })
 		to_delete_id: number,
 		@PubSub(CommandsSubscribtion.Delete)
 		publish: Publisher<Command>,
 	): Promise<Command> {
-		const command_to_delete = await Command.findOne({ id: to_delete_id });
-
-		if (command_to_delete) {
-			await publish(command_to_delete);
-			return command_to_delete;
-		}
-
-		throw new Error("Mesage not found");
+		return deleteCommand({ commandIdToDelete: to_delete_id, publish });
 	}
 
 	@Subscription(() => Command, { topics: CommandsSubscribtion.New })
@@ -69,8 +54,6 @@ export default class CommandResolver {
 
 	@Subscription(() => Command, { topics: CommandsSubscribtion.Delete })
 	async deletedCommand(@Root() command: Command): Promise<Command> {
-		command.deleted = true;
-		await command.save();
 		return command;
 	}
 }

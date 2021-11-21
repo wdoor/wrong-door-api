@@ -4,6 +4,7 @@ import { FindConditions, MoreThan } from "typeorm";
 interface CommandFinderOptions {
 	fromId?: number;
 	onlyExecuted?: boolean;
+	onlyDeleted?: boolean;
 }
 
 export type CommandsFinder = (
@@ -13,14 +14,15 @@ export type CommandsFinder = (
 export const findCommands: CommandsFinder = async ({
 	fromId,
 	onlyExecuted,
+	onlyDeleted,
 }) => {
-	const find_params = {
-		deleted: false,
+	const findParams: FindConditions<Command> = {
+		deleted: onlyDeleted,
 		is_executed: onlyExecuted ?? undefined,
-		fromId: fromId ? MoreThan(fromId) : undefined,
-	} as FindConditions<Command>;
+		id: fromId ? MoreThan(fromId) : undefined,
+	};
 
-	const commands = await Command.find(find_params);
+	const commands = await Command.find(findParams);
 
 	return commands;
 };
