@@ -11,7 +11,7 @@ import {
 	Root,
 	Subscription,
 } from "type-graphql";
-import User from "../entity/users";
+import User from "../../entity/users";
 
 export enum UserSubscribtion {
 	Delete = "delete_user",

@@ -12,7 +12,7 @@ import {
 	Subscription,
 } from "type-graphql";
 import { FindConditions, MoreThan } from "typeorm";
-import ChatMessage from "../entity/chat";
+import ChatMessage from "../../entity/chat";
 
 @InputType()
 class ChatMessageInput {

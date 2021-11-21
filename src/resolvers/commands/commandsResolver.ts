@@ -1,7 +1,6 @@
+import { findCommands } from "resolvers/commands/procedures/findCommands";
 import {
 	Arg,
-	Field,
-	InputType,
 	Int,
 	Mutation,
 	Publisher,
@@ -12,46 +11,23 @@ import {
 	Subscription,
 } from "type-graphql";
 import { FindConditions, MoreThan } from "typeorm";
-import Command from "../entity/commands";
-
-export enum CommandsSubscribtion {
-	Delete = "delete_command",
-	New = "new_command",
-}
-
-@InputType()
-class CommandInput {
-	@Field(() => String)
-	body: string;
-
-	@Field(() => String)
-	username: string;
-
-	@Field(() => Int)
-	type: number;
-}
+import Command from "../../entity/commands";
+import CommandsSubscribtion from "./commandsSubscribtionTypes";
+import { addCommand, CommandInput } from "./procedures/addCommand";
 
 @Resolver()
 export default class CommandResolver {
 	@Query(() => [Command])
 	async Commands(
 		@Arg("id", () => Int, { nullable: true })
-		id: number,
+		id?: number,
 		@Arg("execute_statement", () => Boolean, { nullable: true })
-		execute_statement: boolean,
+		execute_statement?: boolean,
 	): Promise<Command[]> {
-		const find_params = { deleted: false } as FindConditions<Command>;
-
-		if (id !== undefined) {
-			find_params.id = MoreThan(id);
-		}
-
-		if (execute_statement !== undefined) {
-			find_params.is_executed = execute_statement;
-		}
-
-		const commands = await Command.find(find_params);
-
+		const commands = await findCommands({
+			fromId: id,
+			onlyExecuted: execute_statement,
+		});
 		return commands;
 	}
 
@@ -62,14 +38,11 @@ export default class CommandResolver {
 		@PubSub(CommandsSubscribtion.New)
 		publish: Publisher<Command>,
 	): Promise<Command> {
-		const created_command = await Command.create({
-			time: new Date(),
-			...command,
-		}).save();
+		const newCommand = await addCommand(command);
 
-		await publish(created_command);
+		await publish(newCommand);
 
-		return created_command;
+		return newCommand;
 	}
 
 	@Mutation(() => Command)

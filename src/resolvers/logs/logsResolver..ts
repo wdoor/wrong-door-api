@@ -12,8 +12,8 @@ import {
 	Subscription,
 } from "type-graphql";
 import { FindConditions, MoreThan } from "typeorm";
-import Command from "../entity/commands";
-import LogsMessage from "../entity/logs";
+import Command from "../../entity/commands";
+import LogsMessage from "../../entity/logs";
 
 export enum LogsSubscription {
 	Delete = "delete_log_message",

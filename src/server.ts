@@ -7,10 +7,10 @@ import { SubscriptionServer } from "subscriptions-transport-ws";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import Config from "./config/config";
-import ChatResolver from "./resolvers/chat_resolver";
-import CommandResolver from "./resolvers/commands_resolver";
-import LogsResolver from "./resolvers/logs_resolver.";
-import UserResolver from "./resolvers/user_resolver";
+import ChatResolver from "./resolvers/chat/chatResolver";
+import CommandResolver from "./resolvers/commands/commandsResolver";
+import LogsResolver from "./resolvers/logs/logsResolver.";
+import UserResolver from "./resolvers/user/userResolver";
 
 // TODO: Аутентификация
 // TODO: Докер
@@ -24,23 +24,15 @@ import UserResolver from "./resolvers/user_resolver";
 	await createConnection();
 
 	const apolloServer = new ApolloServer({ schema });
+	await apolloServer.start();
 	apolloServer.applyMiddleware({ app });
 
 	const server = createServer(app);
+
 	server.listen(Config.Port, () => {
 		// eslint-disable-next-line no-new
-		new SubscriptionServer(
-			{
-				execute,
-				subscribe,
-				schema,
-			},
-			{
-				server,
-			},
-		);
+		new SubscriptionServer({ execute, subscribe, schema }, { server });
 
-		// eslint-disable-next-line no-console
 		console.log(`
 			express server STARTED
 			on port ${Config.Port}
