@@ -1,7 +1,12 @@
+import { addUser, UserInput } from "resolvers/user/procedures/createUser";
+import { deleteUser } from "resolvers/user/procedures/deleteUser";
+import { findUsers } from "resolvers/user/procedures/fundUsers";
+import {
+	updateUser,
+	UserUpdateInput,
+} from "resolvers/user/procedures/updateUser";
 import {
 	Arg,
-	Field,
-	InputType,
 	Int,
 	Mutation,
 	Publisher,
@@ -11,92 +16,63 @@ import {
 	Root,
 	Subscription,
 } from "type-graphql";
-import User from "../../entity/users";
+import User from "@Entities/users";
 
 export enum UserSubscribtion {
 	Delete = "delete_user",
 	New = "new_user",
 }
 
-@InputType()
-class UserInput {
-	@Field(() => String)
-	deviceid: string;
-
-	@Field(() => String)
-	username: string;
-}
-
-@InputType()
-class UserUpdateInput {
-	@Field(() => String, { nullable: true })
-	username?: string;
-
-	@Field(() => Int, { nullable: true })
-	access_level?: number;
-
-	@Field(() => String, { nullable: true })
-	image?: string;
-}
-
 @Resolver()
-export default class UserResolver {
+export class UserResolver {
 	@Query(() => [User])
-	async Users(): Promise<User[]> {
-		const users = await User.find({ deleted: false });
-		return users;
+	Users(): Promise<User[]> {
+		return findUsers();
 	}
 
 	@Mutation(() => User)
-	async UpdateUser(
+	UpdateUser(
 		@Arg("id", () => Int)
 		id: number,
 		@Arg("updated", () => UserUpdateInput)
 		updated: UserUpdateInput,
 	): Promise<User> {
-		await User.update({ id }, updated);
-		const updated_user = await User.findOneOrFail(id);
-		return updated_user;
+		return updateUser({ updateFields: updated, userId: id });
 	}
 
 	@Mutation(() => User)
-	async CreateUser(
+	CreateUser(
 		@Arg("User", () => UserInput, { nullable: false })
-		new_user: UserInput,
+		newUser: UserInput,
 		@PubSub(UserSubscribtion.New)
 		publish: Publisher<User>,
 	): Promise<User> {
-		const created_user: User = await User.create(new_user).save();
-		await publish(created_user);
-		return created_user;
+		return addUser({ publish, newUser });
 	}
 
 	@Mutation(() => User)
-	async DeleteUser(
+	DeleteUser(
 		@Arg("id", () => Int, { nullable: false })
 		id: number,
 		@PubSub(UserSubscribtion.Delete)
 		publish: Publisher<User>,
 	): Promise<User> {
-		const user_to_delete = await User.findOne({ id });
-
-		if (user_to_delete) {
-			await publish(user_to_delete);
-			return user_to_delete;
-		}
-
-		throw new Error("User not found");
+		return deleteUser({ publish, userId: id });
 	}
 
 	@Subscription(() => User, { topics: UserSubscribtion.New })
-	async newUser(@Root() user: User): Promise<User> {
+	async newUser(
+		@Root()
+		user: User,
+	): Promise<User> {
 		return user;
 	}
 
 	@Subscription(() => User, { topics: UserSubscribtion.Delete })
-	async deletedUser(@Root() user: User): Promise<User> {
-		user.deleted = true;
-		await user.save();
+	async deletedUser(
+		@Root()
+		user: User,
+	): Promise<User> {
 		return user;
 	}
 }
