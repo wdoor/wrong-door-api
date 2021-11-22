@@ -7,7 +7,7 @@ interface LogsFinderParams {
 
 export type LogsFinder = (p: LogsFinderParams) => Promise<LogsMessage[]>;
 
-export const findLogs: LogsFinder = async ({ fromId }) => {
+export const findLogsMessages: LogsFinder = async ({ fromId }) => {
 	const find_params: FindConditions<LogsMessage> = {
 		deleted: false,
 		id: fromId ? MoreThan(fromId) : undefined,

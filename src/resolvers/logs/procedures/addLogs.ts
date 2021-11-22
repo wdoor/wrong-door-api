@@ -21,7 +21,7 @@ interface LogCreatorParams {
 
 export type LogsCreator = (p: LogCreatorParams) => Promise<LogsMessage>;
 
-export const createLogs: LogsCreator = async ({ message, publish }) => {
+export const addLogsMessage: LogsCreator = async ({ message, publish }) => {
 	const newLogMessage: Partial<LogsMessage> = {
 		...message,
 		time: new Date(),

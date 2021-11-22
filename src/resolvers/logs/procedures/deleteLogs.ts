@@ -8,7 +8,7 @@ interface LogsDeletorParams {
 
 export type LogsDeletor = (p: LogsDeletorParams) => Promise<LogsMessage>;
 
-export const deleteLogs: LogsDeletor = async ({ logId, publish }) => {
+export const deleteLogsMessage: LogsDeletor = async ({ logId, publish }) => {
 	const logToDelete = await LogsMessage.findOne({ id: logId });
 
 	if (logToDelete) {

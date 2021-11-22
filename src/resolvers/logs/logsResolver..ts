@@ -10,9 +10,9 @@ import {
 	Subscription,
 } from "type-graphql";
 import LogsMessage from "@Entities/logs";
-import { deleteLogs } from "resolvers/logs/procedures/deleteLogs";
-import { createLogs, LogsMessageInput } from "./procedures/addLogs";
-import { findLogs } from "./procedures/findLogs";
+import { deleteLogsMessage } from "resolvers/logs/procedures/deleteLogs";
+import { addLogsMessage, LogsMessageInput } from "./procedures/addLogs";
+import { findLogsMessages } from "./procedures/findLogs";
 
 export enum LogsSubscription {
 	Delete = "delete_log_message",
@@ -20,13 +20,13 @@ export enum LogsSubscription {
 }
 
 @Resolver()
-export default class LogsResolver {
+export class LogsResolver {
 	@Query(() => [LogsMessage])
 	Logs(
 		@Arg("id", () => Int, { nullable: true })
 		id: number,
 	): Promise<LogsMessage[]> {
-		return findLogs({ fromId: id });
+		return findLogsMessages({ fromId: id });
 	}
 
 	@Mutation(() => LogsMessage)
@@ -36,27 +36,31 @@ export default class LogsResolver {
 		@PubSub(LogsSubscription.New)
 		publish: Publisher<LogsMessage>,
 	): Promise<LogsMessage> {
-		return createLogs({ message, publish });
+		return addLogsMessage({ message, publish });
 	}
 
 	@Mutation(() => LogsMessage)
 	DeleteLog(
 		@Arg("id", () => Int, { nullable: false })
-		to_delete_id: number,
+		logId: number,
 		@PubSub(LogsSubscription.Delete)
 		publish: Publisher<LogsMessage>,
 	): Promise<LogsMessage> {
-		return deleteLogs({ publish, logId: to_delete_id });
+		return deleteLogsMessage({ publish, logId });
 	}
 
 	@Subscription(() => LogsMessage, { topics: LogsSubscription.New })
-	async newLogMessage(@Root() log_message: LogsMessage): Promise<LogsMessage> {
+	async newLogMessage(
+		@Root()
+		log_message: LogsMessage,
+	): Promise<LogsMessage> {
 		return log_message;
 	}
 
 	@Subscription(() => LogsMessage, { topics: LogsSubscription.Delete })
 	async deletedLogMessage(
-		@Root() log_message: LogsMessage,
+		@Root()
+		log_message: LogsMessage,
 	): Promise<LogsMessage> {
 		return log_message;
 	}
