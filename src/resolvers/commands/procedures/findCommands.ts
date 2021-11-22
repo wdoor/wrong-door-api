@@ -18,7 +18,7 @@ export const findCommands: CommandsFinder = async ({
 }) => {
 	const findParams: FindConditions<Command> = {
 		deleted: onlyDeleted,
-		is_executed: onlyExecuted ?? undefined,
+		is_executed: onlyExecuted,
 		id: fromId ? MoreThan(fromId) : undefined,
 	};
 

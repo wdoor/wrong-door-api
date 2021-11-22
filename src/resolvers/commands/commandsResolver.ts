@@ -12,19 +12,23 @@ import {
 import Command from "@Entities/commands";
 import { findCommands } from "./procedures/findCommands";
 import { deleteCommand } from "./procedures/deleteCommand";
-import CommandsSubscribtion from "./commandsSubscribtionTypes";
 import { addCommand, CommandInput } from "./procedures/addCommand";
 
+export enum CommandsSubscribtion {
+	Delete = "delete_command",
+	New = "new_command",
+}
+
 @Resolver()
-export default class CommandResolver {
+export class CommandResolver {
 	@Query(() => [Command])
 	Commands(
 		@Arg("id", () => Int, { nullable: true })
 		id?: number,
 		@Arg("execute_statement", () => Boolean, { nullable: true })
-		execute_statement?: boolean,
+		executeStatement?: boolean,
 	): Promise<Command[]> {
-		return findCommands({ fromId: id, onlyExecuted: execute_statement });
+		return findCommands({ fromId: id, onlyExecuted: executeStatement });
 	}
 
 	@Mutation(() => Command)
@@ -40,11 +44,11 @@ export default class CommandResolver {
 	@Mutation(() => Command)
 	DeleteCommand(
 		@Arg("id", () => Int, { nullable: false })
-		to_delete_id: number,
+		commandIdToDelete: number,
 		@PubSub(CommandsSubscribtion.Delete)
 		publish: Publisher<Command>,
 	): Promise<Command> {
-		return deleteCommand({ commandIdToDelete: to_delete_id, publish });
+		return deleteCommand({ commandIdToDelete, publish });
 	}
 
 	@Subscription(() => Command, { topics: CommandsSubscribtion.New })
