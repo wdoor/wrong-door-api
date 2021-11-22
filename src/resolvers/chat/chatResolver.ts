@@ -1,7 +1,11 @@
 import {
+	addChatMessage,
+	ChatMessageInput,
+} from "resolvers/chat/procedures/addMessage";
+import { deleteChatMessage } from "resolvers/chat/procedures/deleteMessage";
+import { findChatMessages } from "resolvers/chat/procedures/findMessages";
+import {
 	Arg,
-	Field,
-	InputType,
 	Int,
 	Mutation,
 	Publisher,
@@ -11,66 +15,40 @@ import {
 	Root,
 	Subscription,
 } from "type-graphql";
-import { FindConditions, MoreThan } from "typeorm";
-import ChatMessage from "../../entity/chat";
+import ChatMessage from "@Entities/chat";
 
-@InputType()
-class ChatMessageInput {
-	@Field(() => String)
-	message: string;
-
-	@Field(() => Int)
-	userId: number;
-}
 export enum ChatSubscribtion {
 	Delete = "delete_chat_message",
 	New = "new_chat_message",
 }
+
 @Resolver()
-export default class ChatResolver {
+export class ChatResolver {
 	@Query(() => [ChatMessage])
-	async Messages(
+	Messages(
 		@Arg("id", () => Int, { nullable: true }) id: number,
 	): Promise<ChatMessage[]> {
-		const find_params: FindConditions<ChatMessage> = { deleted: false };
-
-		if (id) find_params.id = MoreThan(id);
-
-		const messages = await ChatMessage.find(find_params);
-
-		return messages;
+		return findChatMessages({ fromId: id });
 	}
 
 	@Mutation(() => ChatMessage)
-	async AddMessage(
+	AddMessage(
 		@Arg("message", () => ChatMessageInput, { nullable: false })
-		message: ChatMessage,
+		newMessage: ChatMessage,
 		@PubSub(ChatSubscribtion.New)
 		publish: Publisher<ChatMessage>,
 	): Promise<ChatMessage> {
-		const created_message = await ChatMessage.create({
-			...message,
-			time: new Date(),
-		}).save();
-		await publish(created_message);
-		return created_message;
+		return addChatMessage({ newMessage, publish });
 	}
 
 	@Mutation(() => ChatMessage)
-	async DeleteMessage(
+	DeleteMessage(
 		@Arg("id", () => Int, { nullable: false })
-		to_delete_id: number,
+		messageIdToDelete: number,
 		@PubSub(ChatSubscribtion.Delete)
 		publish: Publisher<ChatMessage>,
 	): Promise<ChatMessage> {
-		const message_to_delete = await ChatMessage.findOne({ id: to_delete_id });
-
-		if (message_to_delete) {
-			await publish(message_to_delete);
-			return message_to_delete;
-		}
-
-		throw new Error("Mesage not found");
+		return deleteChatMessage({ publish, messageIdToDelete });
 	}
 
 	@Subscription(() => ChatMessage, { topics: ChatSubscribtion.New })
@@ -80,8 +58,6 @@ export default class ChatResolver {
 
 	@Subscription(() => ChatMessage, { topics: ChatSubscribtion.Delete })
 	async deletedMessage(@Root() message: ChatMessage): Promise<ChatMessage> {
-		message.deleted = true;
-		await message.save();
 		return message;
 	}
 }
