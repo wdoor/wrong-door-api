@@ -6,11 +6,13 @@ import "reflect-metadata";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
-import Config from "./config/config";
-import ChatResolver from "./resolvers/chat/chatResolver";
-import CommandResolver from "./resolvers/commands/commandsResolver";
-import LogsResolver from "./resolvers/logs/logsResolver.";
-import UserResolver from "./resolvers/user/userResolver";
+import {
+	ChatResolver,
+	CommandResolver,
+	LogsResolver,
+	UserResolver,
+} from "@Resolvers/index";
+import Config from "@Config";
 
 // TODO: Аутентификация
 // TODO: Докер

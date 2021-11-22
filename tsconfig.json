@@ -14,7 +14,9 @@
 		"experimentalDecorators": true,
 		"forceConsistentCasingInFileNames": true,
 		"paths": {
-			"@Entities/*": ["./entity/*"]
+			"@Entities/*": ["./entity/*"],
+			"@Resolvers/*": ["./resolvers/*"],
+			"@Config": ["./config/config"]
 		}
 	},
 	"include": ["**/*"]
