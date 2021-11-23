@@ -1,8 +1,8 @@
+import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
 import express from "express";
 import { execute, subscribe } from "graphql";
 import { createServer } from "http";
-import "reflect-metadata";
 import { SubscriptionServer } from "subscriptions-transport-ws";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
