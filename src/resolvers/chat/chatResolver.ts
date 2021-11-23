@@ -17,7 +17,7 @@ import {
 } from "type-graphql";
 import ChatMessage from "@Entities/chat";
 
-export enum ChatSubscribtion {
+export enum ChatSubscription {
 	Delete = "delete_chat_message",
 	New = "new_chat_message",
 }
@@ -35,7 +35,7 @@ export class ChatResolver {
 	AddMessage(
 		@Arg("message", () => ChatMessageInput, { nullable: false })
 		newMessage: ChatMessage,
-		@PubSub(ChatSubscribtion.New)
+		@PubSub(ChatSubscription.New)
 		publish: Publisher<ChatMessage>,
 	): Promise<ChatMessage> {
 		return addChatMessage({ newMessage, publish });
@@ -45,18 +45,18 @@ export class ChatResolver {
 	DeleteMessage(
 		@Arg("id", () => Int, { nullable: false })
 		messageIdToDelete: number,
-		@PubSub(ChatSubscribtion.Delete)
+		@PubSub(ChatSubscription.Delete)
 		publish: Publisher<ChatMessage>,
 	): Promise<ChatMessage> {
 		return deleteChatMessage({ publish, messageIdToDelete });
 	}
 
-	@Subscription(() => ChatMessage, { topics: ChatSubscribtion.New })
+	@Subscription(() => ChatMessage, { topics: ChatSubscription.New })
 	async newMessage(@Root() message: ChatMessage): Promise<ChatMessage> {
 		return message;
 	}
 
-	@Subscription(() => ChatMessage, { topics: ChatSubscribtion.Delete })
+	@Subscription(() => ChatMessage, { topics: ChatSubscription.Delete })
 	async deletedMessage(@Root() message: ChatMessage): Promise<ChatMessage> {
 		return message;
 	}

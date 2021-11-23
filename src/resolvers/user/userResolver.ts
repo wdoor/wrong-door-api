@@ -18,7 +18,7 @@ import {
 } from "type-graphql";
 import User from "@Entities/users";
 
-export enum UserSubscribtion {
+export enum UserSubscription {
 	Delete = "delete_user",
 	New = "new_user",
 }
@@ -44,7 +44,7 @@ export class UserResolver {
 	CreateUser(
 		@Arg("User", () => UserInput, { nullable: false })
 		newUser: UserInput,
-		@PubSub(UserSubscribtion.New)
+		@PubSub(UserSubscription.New)
 		publish: Publisher<User>,
 	): Promise<User> {
 		return addUser({ publish, newUser });
@@ -54,13 +54,13 @@ export class UserResolver {
 	DeleteUser(
 		@Arg("id", () => Int, { nullable: false })
 		id: number,
-		@PubSub(UserSubscribtion.Delete)
+		@PubSub(UserSubscription.Delete)
 		publish: Publisher<User>,
 	): Promise<User> {
 		return deleteUser({ publish, userId: id });
 	}
 
-	@Subscription(() => User, { topics: UserSubscribtion.New })
+	@Subscription(() => User, { topics: UserSubscription.New })
 	async newUser(
 		@Root()
 		user: User,
@@ -68,7 +68,7 @@ export class UserResolver {
 		return user;
 	}
 
-	@Subscription(() => User, { topics: UserSubscribtion.Delete })
+	@Subscription(() => User, { topics: UserSubscription.Delete })
 	async deletedUser(
 		@Root()
 		user: User,

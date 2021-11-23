@@ -14,7 +14,7 @@ import { findCommands } from "./procedures/findCommands";
 import { deleteCommand } from "./procedures/deleteCommand";
 import { addCommand, CommandInput } from "./procedures/addCommand";
 
-export enum CommandsSubscribtion {
+export enum CommandsSubscription {
 	Delete = "delete_command",
 	New = "new_command",
 }
@@ -35,7 +35,7 @@ export class CommandResolver {
 	AddCommand(
 		@Arg("command", () => CommandInput, { nullable: false })
 		command: CommandInput,
-		@PubSub(CommandsSubscribtion.New)
+		@PubSub(CommandsSubscription.New)
 		publish: Publisher<Command>,
 	): Promise<Command> {
 		return addCommand({ command, publish });
@@ -45,18 +45,18 @@ export class CommandResolver {
 	DeleteCommand(
 		@Arg("id", () => Int, { nullable: false })
 		commandIdToDelete: number,
-		@PubSub(CommandsSubscribtion.Delete)
+		@PubSub(CommandsSubscription.Delete)
 		publish: Publisher<Command>,
 	): Promise<Command> {
 		return deleteCommand({ commandIdToDelete, publish });
 	}
 
-	@Subscription(() => Command, { topics: CommandsSubscribtion.New })
+	@Subscription(() => Command, { topics: CommandsSubscription.New })
 	async newCommand(@Root() command: Command): Promise<Command> {
 		return command;
 	}
 
-	@Subscription(() => Command, { topics: CommandsSubscribtion.Delete })
+	@Subscription(() => Command, { topics: CommandsSubscription.Delete })
 	async deletedCommand(@Root() command: Command): Promise<Command> {
 		return command;
 	}
