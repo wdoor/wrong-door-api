@@ -1,0 +1,8 @@
+{
+	"type": "sqlite",
+	"database": "main.db",
+	"autoSchemaSync": true,
+	"logging": true,
+	"synchronize": true,
+	"entities": ["src/entity/**/*.ts"]
+}
