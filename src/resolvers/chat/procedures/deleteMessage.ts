@@ -22,6 +22,8 @@ export const deleteChatMessage: ChatMessageDeletor = async ({
 
 	messageToDelete.deleted = true;
 	await messageToDelete.save();
+
 	await publish(messageToDelete);
+
 	return messageToDelete;
 };

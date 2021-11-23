@@ -22,6 +22,8 @@ export type UserUpdater = (p: UserUpdaterProps) => Promise<User>;
 
 export const updateUser: UserUpdater = async ({ updateFields, userId }) => {
 	await User.update({ id: userId }, updateFields);
+
 	const updatedUser = await User.findOneOrFail(userId);
+
 	return updatedUser;
 };

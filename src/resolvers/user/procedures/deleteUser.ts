@@ -17,6 +17,8 @@ export const deleteUser: UserDeletor = async ({ userId, publish }) => {
 
 	userToDelete.deleted = true;
 	await userToDelete.save();
+
 	await publish(userToDelete);
+
 	return userToDelete;
 };

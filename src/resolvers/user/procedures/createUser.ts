@@ -19,6 +19,8 @@ export type UserCreator = (p: UserCreatorProps) => Promise<User>;
 
 export const addUser: UserCreator = async ({ newUser, publish }) => {
 	const createdUser: User = await User.create(newUser).save();
+
 	await publish(createdUser);
+
 	return createdUser;
 };

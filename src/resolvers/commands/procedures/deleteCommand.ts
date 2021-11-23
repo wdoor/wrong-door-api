@@ -14,12 +14,14 @@ export const deleteCommand: CommandDeletor = async ({
 }) => {
 	const commandToDelete = await Command.findOne({ id: commandIdToDelete });
 
-	if (commandToDelete) {
-		commandToDelete.deleted = true;
-		await commandToDelete.save();
-		await publish(commandToDelete);
-		return commandToDelete;
+	if (!commandToDelete) {
+		throw new Error("Mesage not found");
 	}
 
-	throw new Error("Mesage not found");
+	commandToDelete.deleted = true;
+	await commandToDelete.save();
+
+	await publish(commandToDelete);
+
+	return commandToDelete;
 };

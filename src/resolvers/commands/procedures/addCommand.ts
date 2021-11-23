@@ -25,6 +25,8 @@ export const addCommand: CommandCreator = async ({ command, publish }) => {
 		time: new Date(),
 		...command,
 	}).save();
+
 	publish(createdCommand);
+
 	return createdCommand;
 };

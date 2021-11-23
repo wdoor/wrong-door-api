@@ -11,12 +11,14 @@ export type LogsDeletor = (p: LogsDeletorParams) => Promise<LogsMessage>;
 export const deleteLogsMessage: LogsDeletor = async ({ logId, publish }) => {
 	const logToDelete = await LogsMessage.findOne({ id: logId });
 
-	if (logToDelete) {
-		logToDelete.deleted = true;
-		await logToDelete.save();
-		await publish(logToDelete);
-		return logToDelete;
+	if (!logToDelete) {
+		throw new Error("Log Message not found");
 	}
 
-	throw new Error("Log Message not found");
+	logToDelete.deleted = true;
+	await logToDelete.save();
+
+	await publish(logToDelete);
+
+	return logToDelete;
 };
