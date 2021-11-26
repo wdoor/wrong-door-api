@@ -1,5 +1,6 @@
 import {
 	Arg,
+	Authorized,
 	Int,
 	Mutation,
 	Publisher,
@@ -21,6 +22,7 @@ export enum CommandsSubscription {
 
 @Resolver()
 export class CommandResolver {
+	@Authorized()
 	@Query(() => [Command])
 	Commands(
 		@Arg("id", () => Int, { nullable: true })
@@ -31,6 +33,7 @@ export class CommandResolver {
 		return findCommands({ fromId: id, onlyExecuted: executeStatement });
 	}
 
+	@Authorized()
 	@Mutation(() => Command)
 	AddCommand(
 		@Arg("command", () => CommandInput, { nullable: false })
@@ -41,6 +44,7 @@ export class CommandResolver {
 		return addCommand({ command, publish });
 	}
 
+	@Authorized()
 	@Mutation(() => Command)
 	DeleteCommand(
 		@Arg("id", () => Int, { nullable: false })
@@ -51,11 +55,13 @@ export class CommandResolver {
 		return deleteCommand({ commandIdToDelete, publish });
 	}
 
+	@Authorized()
 	@Subscription(() => Command, { topics: CommandsSubscription.New })
 	async newCommand(@Root() command: Command): Promise<Command> {
 		return command;
 	}
 
+	@Authorized()
 	@Subscription(() => Command, { topics: CommandsSubscription.Delete })
 	async deletedCommand(@Root() command: Command): Promise<Command> {
 		return command;

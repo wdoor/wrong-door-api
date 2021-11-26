@@ -1,32 +1,50 @@
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
-import express from "express";
-import { execute, subscribe } from "graphql";
-import { createServer } from "http";
-import { SubscriptionServer } from "subscriptions-transport-ws";
+import { AuthMiddleware } from "auth/auth";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
+import { createServer } from "http";
+import { execute, subscribe } from "graphql";
+import { SubscriptionServer } from "subscriptions-transport-ws";
+import Config from "@Config";
+import express from "express";
+import jwt from "express-jwt";
 import {
 	ChatResolver,
 	CommandResolver,
 	LogsResolver,
 	UserResolver,
 } from "@Resolvers/index";
-import Config from "@Config";
 
 // TODO: Аутентификация
 // TODO: Докер
 
 (async () => {
-	const app = express();
-	const schema = await buildSchema({
-		resolvers: [ChatResolver, LogsResolver, CommandResolver, UserResolver],
-	});
-
 	await createConnection();
 
-	const apolloServer = new ApolloServer({ schema });
+	const app = express();
+
+	const schema = await buildSchema({
+		resolvers: [ChatResolver, LogsResolver, CommandResolver, UserResolver],
+		authChecker: AuthMiddleware,
+	});
+
+	const apolloServer = new ApolloServer({
+		schema,
+		context: ({ req }) => ({ req, user: req.user }),
+	});
+
+	app.use(
+		"/graphql",
+		jwt({
+			secret: Config.SecretKey,
+			algorithms: ["HS256"],
+			credentialsRequired: false,
+		}),
+	);
+
 	await apolloServer.start();
+
 	apolloServer.applyMiddleware({ app });
 
 	const server = createServer(app);
@@ -35,6 +53,7 @@ import Config from "@Config";
 		// eslint-disable-next-line no-new
 		new SubscriptionServer({ execute, subscribe, schema }, { server });
 
+		// eslint-disable-next-line no-console
 		console.log(`
 			express server STARTED
 			on port ${Config.Port}

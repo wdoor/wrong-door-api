@@ -1,5 +1,6 @@
 import {
 	Arg,
+	Authorized,
 	Int,
 	Mutation,
 	Publisher,
@@ -21,6 +22,7 @@ export enum LogsSubscription {
 
 @Resolver()
 export class LogsResolver {
+	@Authorized()
 	@Query(() => [LogsMessage])
 	Logs(
 		@Arg("id", () => Int, { nullable: true })
@@ -29,6 +31,7 @@ export class LogsResolver {
 		return findLogsMessages({ fromId: id });
 	}
 
+	@Authorized()
 	@Mutation(() => LogsMessage)
 	AddLog(
 		@Arg("log", () => LogsMessageInput, { nullable: false })
@@ -39,6 +42,7 @@ export class LogsResolver {
 		return addLogsMessage({ message, publish });
 	}
 
+	@Authorized()
 	@Mutation(() => LogsMessage)
 	DeleteLog(
 		@Arg("id", () => Int, { nullable: false })
@@ -49,6 +53,7 @@ export class LogsResolver {
 		return deleteLogsMessage({ publish, logId });
 	}
 
+	@Authorized()
 	@Subscription(() => LogsMessage, { topics: LogsSubscription.New })
 	async newLogMessage(
 		@Root()
@@ -57,6 +62,7 @@ export class LogsResolver {
 		return log_message;
 	}
 
+	@Authorized()
 	@Subscription(() => LogsMessage, { topics: LogsSubscription.Delete })
 	async deletedLogMessage(
 		@Root()

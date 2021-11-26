@@ -2,10 +2,10 @@ import { registerEnumType } from "type-graphql";
 
 /** Уровень доступа пользователя */
 enum AccessLevel {
-	Denied = 0,
 	User = 1,
 	Pro = 2,
 	Admin = 3,
+	Denied = 4,
 }
 
 registerEnumType(AccessLevel, {

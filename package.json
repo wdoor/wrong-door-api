@@ -9,8 +9,7 @@
 		"watch": "tsc-watch --p tsconfig.json --onSuccess 'yarn build && yarn start'"
 	},
 	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"author": "Dmitriy Rodin",
 	"dependencies": {
 		"apollo-server-express": "^3.0.1",
 		"class-validator": "^0.13.1",

@@ -7,6 +7,7 @@ import {
 } from "resolvers/user/procedures/updateUser";
 import {
 	Arg,
+	Authorized,
 	Int,
 	Mutation,
 	Publisher,
@@ -25,11 +26,13 @@ export enum UserSubscription {
 
 @Resolver()
 export class UserResolver {
+	@Authorized()
 	@Query(() => [User])
 	Users(): Promise<User[]> {
 		return findUsers();
 	}
 
+	@Authorized()
 	@Mutation(() => User)
 	UpdateUser(
 		@Arg("id", () => Int)
@@ -40,6 +43,7 @@ export class UserResolver {
 		return updateUser({ updateFields: updated, userId: id });
 	}
 
+	@Authorized()
 	@Mutation(() => User)
 	CreateUser(
 		@Arg("User", () => UserInput, { nullable: false })
@@ -50,6 +54,7 @@ export class UserResolver {
 		return addUser({ publish, newUser });
 	}
 
+	@Authorized()
 	@Mutation(() => User)
 	DeleteUser(
 		@Arg("id", () => Int, { nullable: false })
@@ -60,6 +65,7 @@ export class UserResolver {
 		return deleteUser({ publish, userId: id });
 	}
 
+	@Authorized()
 	@Subscription(() => User, { topics: UserSubscription.New })
 	async newUser(
 		@Root()
@@ -68,6 +74,7 @@ export class UserResolver {
 		return user;
 	}
 
+	@Authorized()
 	@Subscription(() => User, { topics: UserSubscription.Delete })
 	async deletedUser(
 		@Root()

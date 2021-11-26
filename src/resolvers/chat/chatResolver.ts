@@ -6,6 +6,7 @@ import { deleteChatMessage } from "resolvers/chat/procedures/deleteMessage";
 import { findChatMessages } from "resolvers/chat/procedures/findMessages";
 import {
 	Arg,
+	Authorized,
 	Int,
 	Mutation,
 	Publisher,
@@ -24,6 +25,7 @@ export enum ChatSubscription {
 
 @Resolver()
 export class ChatResolver {
+	@Authorized()
 	@Query(() => [ChatMessage])
 	Messages(
 		@Arg("id", () => Int, { nullable: true }) id: number,
@@ -31,6 +33,7 @@ export class ChatResolver {
 		return findChatMessages({ fromId: id });
 	}
 
+	@Authorized()
 	@Mutation(() => ChatMessage)
 	AddMessage(
 		@Arg("message", () => ChatMessageInput, { nullable: false })
@@ -41,6 +44,7 @@ export class ChatResolver {
 		return addChatMessage({ newMessage, publish });
 	}
 
+	@Authorized()
 	@Mutation(() => ChatMessage)
 	DeleteMessage(
 		@Arg("id", () => Int, { nullable: false })
@@ -51,11 +55,13 @@ export class ChatResolver {
 		return deleteChatMessage({ publish, messageIdToDelete });
 	}
 
+	@Authorized()
 	@Subscription(() => ChatMessage, { topics: ChatSubscription.New })
 	async newMessage(@Root() message: ChatMessage): Promise<ChatMessage> {
 		return message;
 	}
 
+	@Authorized()
 	@Subscription(() => ChatMessage, { topics: ChatSubscription.Delete })
 	async deletedMessage(@Root() message: ChatMessage): Promise<ChatMessage> {
 		return message;
