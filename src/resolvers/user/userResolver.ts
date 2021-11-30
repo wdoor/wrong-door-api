@@ -1,6 +1,6 @@
 import { addUser, UserInput } from "resolvers/user/procedures/createUser";
 import { deleteUser } from "resolvers/user/procedures/deleteUser";
-import { findUsers } from "resolvers/user/procedures/fundUsers";
+import { findUsers } from "resolvers/user/procedures/findUsers";
 import {
 	updateUser,
 	UserUpdateInput,

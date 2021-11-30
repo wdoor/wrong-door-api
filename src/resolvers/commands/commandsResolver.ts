@@ -30,7 +30,7 @@ export class CommandResolver {
 		@Arg("execute_statement", () => Boolean, { nullable: true })
 		executeStatement?: boolean,
 	): Promise<Command[]> {
-		return findCommands({ fromId: id, onlyExecuted: executeStatement });
+		return findCommands({ fromId: id, executionState: executeStatement });
 	}
 
 	@Authorized()

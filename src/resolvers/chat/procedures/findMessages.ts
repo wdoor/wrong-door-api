@@ -1,8 +1,9 @@
 import ChatMessage from "@Entities/chat";
 import { FindConditions, MoreThan } from "typeorm";
+import combineFindParams from "utils/combineFindParams";
 
 interface ChatMessageFinderProps {
-	fromId: number;
+	fromId?: number;
 	onlyDeleted?: boolean;
 }
 
@@ -14,10 +15,10 @@ export const findChatMessages: ChatMessageFinder = async ({
 	fromId,
 	onlyDeleted,
 }) => {
-	const findParams: FindConditions<ChatMessage> = {
+	const findParams = combineFindParams<ChatMessage>({
 		deleted: onlyDeleted,
-		id: fromId ? MoreThan(fromId) : undefined,
-	};
+		id: MoreThan(fromId ?? 0),
+	});
 
 	const messages = await ChatMessage.find(findParams);
 

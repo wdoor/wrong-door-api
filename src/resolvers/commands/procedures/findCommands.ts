@@ -1,10 +1,11 @@
 import Command from "@Entities/commands";
 import { FindConditions, MoreThan } from "typeorm";
+import combineFindParams from "utils/combineFindParams";
 
 interface CommandFinderOptions {
 	fromId?: number;
-	onlyExecuted?: boolean;
-	onlyDeleted?: boolean;
+	executionState?: boolean;
+	deletionState?: boolean;
 }
 
 export type CommandsFinder = (
@@ -13,14 +14,14 @@ export type CommandsFinder = (
 
 export const findCommands: CommandsFinder = async ({
 	fromId,
-	onlyExecuted,
-	onlyDeleted,
+	executionState,
+	deletionState,
 }) => {
-	const findParams: FindConditions<Command> = {
-		deleted: onlyDeleted,
-		is_executed: onlyExecuted,
+	const findParams = combineFindParams<Command>({
+		deleted: deletionState,
+		is_executed: executionState,
 		id: fromId ? MoreThan(fromId) : undefined,
-	};
+	});
 
 	const commands = await Command.find(findParams);
 
