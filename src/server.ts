@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { ApolloServer } from "apollo-server-express";
-import { AuthMiddleware } from "auth/auth";
+import { authMiddleware } from "auth/auth";
 import { buildSchema } from "type-graphql";
 import { createConnection } from "typeorm";
 import { createServer } from "http";
@@ -26,7 +26,7 @@ import {
 
 	const schema = await buildSchema({
 		resolvers: [ChatResolver, LogsResolver, CommandResolver, UserResolver],
-		authChecker: AuthMiddleware,
+		authChecker: authMiddleware,
 	});
 
 	const apolloServer = new ApolloServer({

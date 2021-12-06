@@ -1,49 +1,36 @@
 import AccessLevel from "@Entities/access_level";
 import User from "@Entities/users";
-import { Console } from "console";
+import { UserInput } from "@Resolvers/user/procedures/createUser";
+import getAllLowerRoles from "auth/getAllLowerRoles";
 import { AuthChecker } from "type-graphql";
 
-export interface UserContext {
-	username: string;
-	deviceid: string;
-}
-
+type UserCredentials = UserInput & { iat: number };
 export interface ContextType {
-	user: User | undefined;
+	user: UserCredentials | User | undefined;
 }
 
-const getAllLowerRoles = (level: AccessLevel): AccessLevel[] => {
-	const allLowerRoles = Object.keys(AccessLevel)
-		.filter(Number)
-		.find((n) => Number(n) <= level);
+type MyAuthMiddleware = AuthChecker<ContextType, AccessLevel>;
 
-	if (!allLowerRoles) {
-		throw new Error("Cannot find roles of user");
-	}
-
-	return allLowerRoles as unknown as AccessLevel[];
-};
-
-export const AuthMiddleware: AuthChecker<ContextType, AccessLevel> = async (
-	{ context },
-	roles,
-) => {
-	roles = [];
-
+export const authMiddleware: MyAuthMiddleware = async ({ context }, roles) => {
 	const credentials = context.user;
+
 	if (!credentials) return false;
 
-	const user = await User.findOne({ where: credentials });
+	const user = await User.findOne({
+		where: {
+			username: credentials.username,
+			deviceid: credentials.deviceid,
+		},
+	});
 
-	if (user) {
-		if (user.access_level === AccessLevel.Denied) {
-			return false;
-		}
-
-		roles.push(...getAllLowerRoles(user.access_level));
-
-		return true;
+	if (!user || user.isBlocked() || user.deleted) {
+		return false;
 	}
 
-	return false;
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	roles = getAllLowerRoles(user.access_level);
+
+	context.user = user;
+
+	return true;
 };
