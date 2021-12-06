@@ -16,9 +16,6 @@ import {
 	UserResolver,
 } from "@Resolvers/index";
 
-// TODO: Аутентификация
-// TODO: Докер
-
 (async () => {
 	await createConnection();
 
@@ -50,8 +47,7 @@ import {
 	const server = createServer(app);
 
 	server.listen(Config.Port, () => {
-		// eslint-disable-next-line no-new
-		new SubscriptionServer({ execute, subscribe, schema }, { server });
+		SubscriptionServer.create({ execute, subscribe, schema }, { server });
 
 		// eslint-disable-next-line no-console
 		console.log(`
