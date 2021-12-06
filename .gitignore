@@ -5,5 +5,5 @@ ormconfig.json
 dist
 
 
-main.db
+*.db
 *.db-journal
