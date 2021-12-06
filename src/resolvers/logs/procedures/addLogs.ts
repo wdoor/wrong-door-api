@@ -1,14 +1,12 @@
 import Command from "@Entities/commands";
 import LogsMessage from "@Entities/logs";
+import User from "@Entities/users";
 import { Field, InputType, Int, Publisher } from "type-graphql";
 
 @InputType()
 export class LogsMessageInput {
 	@Field(() => String)
 	message: string;
-
-	@Field(() => String)
-	username: string;
 
 	@Field(() => Int)
 	commandId: number;
@@ -17,13 +15,19 @@ export class LogsMessageInput {
 interface LogCreatorParams {
 	message: LogsMessageInput;
 	publish: Publisher<LogsMessage>;
+	user: User;
 }
 
 export type LogsCreator = (p: LogCreatorParams) => Promise<LogsMessage>;
 
-export const addLogsMessage: LogsCreator = async ({ message, publish }) => {
+export const addLogsMessage: LogsCreator = async ({
+	message,
+	publish,
+	user,
+}) => {
 	const newLogMessage: Partial<LogsMessage> = {
 		...message,
+		userId: user.id,
 		time: new Date(),
 	};
 

@@ -16,11 +16,20 @@ export class UserUpdateInput {
 interface UserUpdaterProps {
 	userId: number;
 	updateFields: UserUpdateInput;
+	user: User;
 }
 
 export type UserUpdater = (p: UserUpdaterProps) => Promise<User>;
 
-export const updateUser: UserUpdater = async ({ updateFields, userId }) => {
+export const updateUser: UserUpdater = async ({
+	updateFields,
+	userId,
+	user,
+}) => {
+	if (user.id !== userId && !user.isAdmin()) {
+		throw new Error("You are trying to update wrong user");
+	}
+
 	await User.update({ id: userId }, updateFields);
 
 	const updatedUser = await User.findOneOrFail(userId);

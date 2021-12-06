@@ -1,6 +1,7 @@
 import {
 	Arg,
 	Authorized,
+	Ctx,
 	Int,
 	Mutation,
 	Publisher,
@@ -12,6 +13,7 @@ import {
 } from "type-graphql";
 import LogsMessage from "@Entities/logs";
 import { deleteLogsMessage } from "resolvers/logs/procedures/deleteLogs";
+import Context from "@Resolvers/context";
 import { addLogsMessage, LogsMessageInput } from "./procedures/addLogs";
 import { findLogsMessages } from "./procedures/findLogs";
 
@@ -27,8 +29,9 @@ export class LogsResolver {
 	Logs(
 		@Arg("id", () => Int, { nullable: true })
 		id: number,
+		@Ctx() { user }: Context,
 	): Promise<LogsMessage[]> {
-		return findLogsMessages({ fromId: id });
+		return findLogsMessages({ fromId: id, user });
 	}
 
 	@Authorized()
@@ -38,8 +41,9 @@ export class LogsResolver {
 		message: LogsMessageInput,
 		@PubSub(LogsSubscription.New)
 		publish: Publisher<LogsMessage>,
+		@Ctx() { user }: Context,
 	): Promise<LogsMessage> {
-		return addLogsMessage({ message, publish });
+		return addLogsMessage({ message, publish, user });
 	}
 
 	@Authorized()
@@ -49,8 +53,9 @@ export class LogsResolver {
 		logId: number,
 		@PubSub(LogsSubscription.Delete)
 		publish: Publisher<LogsMessage>,
+		@Ctx() { user }: Context,
 	): Promise<LogsMessage> {
-		return deleteLogsMessage({ publish, logId });
+		return deleteLogsMessage({ publish, logId, user });
 	}
 
 	@Authorized()

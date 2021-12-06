@@ -1,10 +1,12 @@
 import ChatMessage from "@Entities/chat";
-import { FindConditions, MoreThan } from "typeorm";
+import User from "@Entities/users";
+import { MoreThan } from "typeorm";
 import combineFindParams from "utils/combineFindParams";
 
 interface ChatMessageFinderProps {
 	fromId?: number;
 	onlyDeleted?: boolean;
+	user: User;
 }
 
 export type ChatMessageFinder = (

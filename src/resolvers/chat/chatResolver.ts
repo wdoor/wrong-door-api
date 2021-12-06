@@ -7,6 +7,7 @@ import { findChatMessages } from "resolvers/chat/procedures/findMessages";
 import {
 	Arg,
 	Authorized,
+	Ctx,
 	Int,
 	Mutation,
 	Publisher,
@@ -17,6 +18,7 @@ import {
 	Subscription,
 } from "type-graphql";
 import ChatMessage from "@Entities/chat";
+import Context from "@Resolvers/context";
 
 export enum ChatSubscription {
 	Delete = "delete_chat_message",
@@ -29,8 +31,9 @@ export class ChatResolver {
 	@Query(() => [ChatMessage])
 	Messages(
 		@Arg("id", () => Int, { nullable: true }) id: number,
+		@Ctx() { user }: Context,
 	): Promise<ChatMessage[]> {
-		return findChatMessages({ fromId: id });
+		return findChatMessages({ fromId: id, user });
 	}
 
 	@Authorized()
@@ -40,8 +43,9 @@ export class ChatResolver {
 		newMessage: ChatMessage,
 		@PubSub(ChatSubscription.New)
 		publish: Publisher<ChatMessage>,
+		@Ctx() { user }: Context,
 	): Promise<ChatMessage> {
-		return addChatMessage({ newMessage, publish });
+		return addChatMessage({ newMessage, publish, user });
 	}
 
 	@Authorized()
@@ -51,8 +55,9 @@ export class ChatResolver {
 		messageIdToDelete: number,
 		@PubSub(ChatSubscription.Delete)
 		publish: Publisher<ChatMessage>,
+		@Ctx() { user }: Context,
 	): Promise<ChatMessage> {
-		return deleteChatMessage({ publish, messageIdToDelete });
+		return deleteChatMessage({ publish, messageIdToDelete, user });
 	}
 
 	@Authorized()

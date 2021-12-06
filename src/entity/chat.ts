@@ -5,6 +5,7 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn,
 } from "typeorm";
 import User from "./users";
@@ -12,17 +13,11 @@ import User from "./users";
 @ObjectType()
 @Entity()
 export default class ChatMessage extends BaseEntity {
+	// #region Regular Fields
+
 	@Field(() => Int)
 	@PrimaryGeneratedColumn()
 	id: number;
-
-	@ManyToOne(() => User, { onDelete: "CASCADE" })
-	@JoinColumn({ name: "userId" })
-	user: User;
-
-	@Field(() => Int)
-	@Column({ nullable: false })
-	userId: number;
 
 	@Field(() => String, { nullable: false })
 	@Column()
@@ -35,4 +30,16 @@ export default class ChatMessage extends BaseEntity {
 	@Field(() => Boolean)
 	@Column({ default: false })
 	deleted: boolean;
+
+	// #endregion
+
+	// #region Connection to user
+	@ManyToOne(() => User, (user) => user.ChatMessages)
+	@JoinColumn({ name: "userId" })
+	user: User;
+
+	@Field(() => Int)
+	@Column({ nullable: false })
+	userId: number;
+	// #endregion
 }

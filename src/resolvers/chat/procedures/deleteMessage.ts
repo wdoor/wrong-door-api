@@ -1,9 +1,11 @@
 import ChatMessage from "@Entities/chat";
+import User from "@Entities/users";
 import { Publisher } from "type-graphql";
 
 interface ChatMessageDeletorParams {
 	messageIdToDelete: number;
 	publish: Publisher<ChatMessage>;
+	user: User;
 }
 
 export type ChatMessageDeletor = (

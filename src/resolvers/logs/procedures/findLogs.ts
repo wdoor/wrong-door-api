@@ -1,9 +1,11 @@
 import LogsMessage from "@Entities/logs";
+import User from "@Entities/users";
 import { MoreThan } from "typeorm";
 import combineFindParams from "utils/combineFindParams";
 
 interface LogsFinderParams {
 	fromId?: number;
+	user: User;
 }
 
 export type LogsFinder = (p: LogsFinderParams) => Promise<LogsMessage[]>;

@@ -1,4 +1,5 @@
 import Command from "@Entities/commands";
+import User from "@Entities/users";
 import { FindConditions, MoreThan } from "typeorm";
 import combineFindParams from "utils/combineFindParams";
 
@@ -6,6 +7,7 @@ interface CommandFinderOptions {
 	fromId?: number;
 	executionState?: boolean;
 	deletionState?: boolean;
+	user: User;
 }
 
 export type CommandsFinder = (

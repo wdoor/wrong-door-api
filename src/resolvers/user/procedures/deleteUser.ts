@@ -4,11 +4,12 @@ import { Publisher } from "type-graphql";
 interface UserDeletorParams {
 	userId: number;
 	publish: Publisher<User>;
+	user: User;
 }
 
 export type UserDeletor = (p: UserDeletorParams) => Promise<User>;
 
-export const deleteUser: UserDeletor = async ({ userId, publish }) => {
+export const deleteUser: UserDeletor = async ({ userId, publish, user }) => {
 	const userToDelete = await User.findOne({ id: userId });
 
 	if (!userToDelete) {

@@ -1,6 +1,7 @@
 import {
 	Arg,
 	Authorized,
+	Ctx,
 	Int,
 	Mutation,
 	Publisher,
@@ -11,6 +12,7 @@ import {
 	Subscription,
 } from "type-graphql";
 import Command from "@Entities/commands";
+import Context from "@Resolvers/context";
 import { findCommands } from "./procedures/findCommands";
 import { deleteCommand } from "./procedures/deleteCommand";
 import { addCommand, CommandInput } from "./procedures/addCommand";
@@ -25,12 +27,13 @@ export class CommandResolver {
 	@Authorized()
 	@Query(() => [Command])
 	Commands(
+		@Ctx() { user }: Context,
 		@Arg("id", () => Int, { nullable: true })
 		id?: number,
 		@Arg("execute_statement", () => Boolean, { nullable: true })
 		executeStatement?: boolean,
 	): Promise<Command[]> {
-		return findCommands({ fromId: id, executionState: executeStatement });
+		return findCommands({ fromId: id, executionState: executeStatement, user });
 	}
 
 	@Authorized()
@@ -40,8 +43,9 @@ export class CommandResolver {
 		command: CommandInput,
 		@PubSub(CommandsSubscription.New)
 		publish: Publisher<Command>,
+		@Ctx() { user }: Context,
 	): Promise<Command> {
-		return addCommand({ command, publish });
+		return addCommand({ command, publish, user });
 	}
 
 	@Authorized()
@@ -51,8 +55,9 @@ export class CommandResolver {
 		commandIdToDelete: number,
 		@PubSub(CommandsSubscription.Delete)
 		publish: Publisher<Command>,
+		@Ctx() { user }: Context,
 	): Promise<Command> {
-		return deleteCommand({ commandIdToDelete, publish });
+		return deleteCommand({ commandIdToDelete, publish, user });
 	}
 
 	@Authorized()

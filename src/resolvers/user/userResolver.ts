@@ -1,4 +1,8 @@
-import { addUser, UserInput } from "resolvers/user/procedures/createUser";
+import {
+	addUser,
+	Token,
+	UserInput,
+} from "resolvers/user/procedures/createUser";
 import { deleteUser } from "resolvers/user/procedures/deleteUser";
 import { findUsers } from "resolvers/user/procedures/findUsers";
 import {
@@ -8,6 +12,7 @@ import {
 import {
 	Arg,
 	Authorized,
+	Ctx,
 	Int,
 	Mutation,
 	Publisher,
@@ -18,6 +23,9 @@ import {
 	Subscription,
 } from "type-graphql";
 import User from "@Entities/users";
+import Context from "@Resolvers/context";
+import AccessLevel from "@Entities/access_level";
+import { findUser } from "@Resolvers/user/procedures/findUser";
 
 export enum UserSubscription {
 	Delete = "delete_user",
@@ -39,30 +47,37 @@ export class UserResolver {
 		id: number,
 		@Arg("updated", () => UserUpdateInput)
 		updated: UserUpdateInput,
+		@Ctx() { user }: Context,
 	): Promise<User> {
-		return updateUser({ updateFields: updated, userId: id });
+		return updateUser({ updateFields: updated, userId: id, user });
 	}
 
 	@Authorized()
-	@Mutation(() => User)
+	@Query(() => User, { nullable: true })
+	GetMyself(@Ctx() { user }: Context) {
+		return findUser({ user });
+	}
+
+	@Mutation(() => Token)
 	CreateUser(
 		@Arg("User", () => UserInput, { nullable: false })
 		newUser: UserInput,
 		@PubSub(UserSubscription.New)
 		publish: Publisher<User>,
-	): Promise<User> {
+	): Promise<Token> {
 		return addUser({ publish, newUser });
 	}
 
-	@Authorized()
+	@Authorized([AccessLevel.Admin])
 	@Mutation(() => User)
 	DeleteUser(
 		@Arg("id", () => Int, { nullable: false })
 		id: number,
 		@PubSub(UserSubscription.Delete)
 		publish: Publisher<User>,
+		@Ctx() { user }: Context,
 	): Promise<User> {
-		return deleteUser({ publish, userId: id });
+		return deleteUser({ publish, userId: id, user });
 	}
 
 	@Authorized()

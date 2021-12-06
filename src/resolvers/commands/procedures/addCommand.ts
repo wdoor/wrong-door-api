@@ -1,13 +1,11 @@
 import { Field, InputType, Int, Publisher } from "type-graphql";
 import Command from "@Entities/commands";
+import User from "@Entities/users";
 
 @InputType()
 export class CommandInput {
 	@Field(() => String)
 	body: string;
-
-	@Field(() => String)
-	username: string;
 
 	@Field(() => Int)
 	type: number;
@@ -16,13 +14,19 @@ export class CommandInput {
 interface CommandCreatorParams {
 	command: CommandInput;
 	publish: Publisher<Command>;
+	user: User;
 }
 
 type CommandCreator = (p: CommandCreatorParams) => Promise<Command>;
 
-export const addCommand: CommandCreator = async ({ command, publish }) => {
+export const addCommand: CommandCreator = async ({
+	command,
+	publish,
+	user,
+}) => {
 	const createdCommand = await Command.create({
 		time: new Date(),
+		userId: user.id,
 		...command,
 	}).save();
 
