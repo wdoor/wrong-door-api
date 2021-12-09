@@ -14,7 +14,7 @@ module.exports = {
 		ecmaVersion: 12,
 		sourceType: "module",
 	},
-	plugins: ["@typescript-eslint"],
+	plugins: ["@typescript-eslint", "unused-imports"],
 	rules: {
 		indent: "off",
 		"linebreak-style": 0,
@@ -27,6 +27,7 @@ module.exports = {
 		"no-useless-constructor": "off",
 		"no-async-promise-executor": "off",
 		"no-cond-assign": "off",
+		"unused-imports/no-unused-imports": ["error"],
 		"valid-jsdoc": [
 			"error",
 			{

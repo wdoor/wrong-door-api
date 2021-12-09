@@ -1,6 +1,6 @@
 import ChatMessage from "@Entities/chat";
 import User from "@Entities/users";
-import { Field, InputType, Int, Publisher } from "type-graphql";
+import { Field, InputType, Publisher } from "type-graphql";
 
 @InputType()
 export class ChatMessageInput {
