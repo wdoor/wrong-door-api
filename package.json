@@ -6,7 +6,8 @@
 		"test": "jest --coverage",
 		"build": "ts-node -r tsconfig-paths/register src/server.ts",
 		"watch": "tsc-watch --p tsconfig.json --onSuccess \"yarn build\"",
-		"lint": "eslint --ext .ts src"
+		"lint": "eslint --ext .ts src",
+		"prepare": "husky install"
 	},
 	"keywords": [],
 	"author": "Dmitriy Rodin",
@@ -53,6 +54,7 @@
 		"eslint-plugin-jsx-a11y": "^6.3.1",
 		"eslint-plugin-prettier": "^3.4.0",
 		"eslint-plugin-unused-imports": "^2.0.0",
+		"husky": "^7.0.4",
 		"jest": "^27.0.6",
 		"nodemon": "^2.0.6",
 		"prettier": "^2.3.2",
