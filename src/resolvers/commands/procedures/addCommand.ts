@@ -1,14 +1,15 @@
-import { Field, InputType, Int, Publisher } from "type-graphql";
+import { Field, InputType, Publisher } from "type-graphql";
 import Command from "@Entities/commands";
 import User from "@Entities/users";
+import CommandType from "@Entities/command_types";
 
 @InputType()
 export class CommandInput {
 	@Field(() => String)
 	body: string;
 
-	@Field(() => Int)
-	type: number;
+	@Field(() => CommandType)
+	type: CommandType;
 }
 
 interface CommandCreatorParams {
