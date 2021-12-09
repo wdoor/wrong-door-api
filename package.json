@@ -5,7 +5,8 @@
 	"scripts": {
 		"test": "jest --coverage",
 		"build": "ts-node -r tsconfig-paths/register src/server.ts",
-		"watch": "tsc-watch --p tsconfig.json --onSuccess \"yarn build\""
+		"watch": "tsc-watch --p tsconfig.json --onSuccess \"yarn build\"",
+		"lint": "eslint --ext .ts src"
 	},
 	"keywords": [],
 	"author": "Dmitriy Rodin",

@@ -9,7 +9,7 @@ interface UserDeletorParams {
 
 export type UserDeletor = (p: UserDeletorParams) => Promise<User>;
 
-export const deleteUser: UserDeletor = async ({ userId, publish, user }) => {
+export const deleteUser: UserDeletor = async ({ userId, publish }) => {
 	const userToDelete = await User.findOne({ id: userId });
 
 	if (!userToDelete) {
